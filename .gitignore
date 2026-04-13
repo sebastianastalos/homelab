@@ -28,6 +28,8 @@ qbittorrent/config/
 sabnzbd/config/
 seerr/config/
 code-server/config/
+immich/library/
+immich/postgres/
 
 # homepage — services.yaml has api keys
 homepage/config/services.yaml
