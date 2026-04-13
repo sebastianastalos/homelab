@@ -1,0 +1,18 @@
+---
+services:
+  code-server:
+    image: lscr.io/linuxserver/code-server:latest
+    container_name: code-server
+    env_file:
+      - .env
+    environment:
+      - PUID=${PUID:-950} #update with your userId or update .env
+      - PGID=${PGID:-950} #update with your groupId or update .env
+    volumes:
+      - ./config:/config
+      - /mnt/storage/code-server/:/code-server
+      - /mnt/storage:/mnt/storage
+
+    ports:
+      - 8443:8443
+    restart: unless-stopped

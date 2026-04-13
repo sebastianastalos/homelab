@@ -1,0 +1,11 @@
+services:
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    network_mode: "container:gluetun"
+    env_file:
+      - .env
+    volumes:
+      - /mnt/storage/qbittorrent/config:/config
+      - /mnt/storage/downloads:/downloads
+    restart: unless-stopped

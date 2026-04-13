@@ -1,0 +1,10 @@
+services:
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    network_mode: "container:gluetun"
+    env_file:
+      - .env
+    volumes:
+      - /mnt/storage/prowlarr/config:/config
+    restart: unless-stopped

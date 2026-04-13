@@ -1,0 +1,83 @@
+# ==========================================================================
+# Secrets — NEVER commit
+# ==========================================================================
+**/.env
+**/.env.*
+!**/.env.example
+
+# Any stray key / cert / credential files
+*.key
+*.pem
+*.crt
+*.pfx
+*.p12
+*.keystore
+*secret*
+*.authkey
+*credentials*
+
+# ==========================================================================
+# VPN configuration (WireGuard private keys, provider server lists)
+# ==========================================================================
+gluetun/config/
+*.conf
+
+# ==========================================================================
+# Tailscale runtime state (contains node identity / keys)
+# ==========================================================================
+tailscale/state/
+
+# ==========================================================================
+# Service runtime data (contain API keys in config.xml, databases, caches,
+# logs, sessions, etc.). These are per-install state, not source of truth.
+# ==========================================================================
+jellyfin/config/
+sonarr/config/
+radarr/config/
+prowlarr/config/
+qbittorrent/config/
+sabnzbd/config/
+seerr/config/
+code-server/config/
+
+# ==========================================================================
+# Homepage — commit user-authored yaml, but services.yaml has API keys
+# ==========================================================================
+homepage/config/services.yaml
+
+# ==========================================================================
+# User content — media & downloads (also way too big for git)
+# ==========================================================================
+media/
+downloads/
+
+# ==========================================================================
+# Databases / WAL files / logs (safety net if any leak out of config/)
+# ==========================================================================
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.log
+logs/
+Logs/
+
+# ==========================================================================
+# Local-only docs (personal notes, Claude Code memory)
+# ==========================================================================
+CLAUDE.md
+
+# ==========================================================================
+# OS / editor cruft
+# ==========================================================================
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.bak
+*.tmp

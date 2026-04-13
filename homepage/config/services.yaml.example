@@ -1,0 +1,103 @@
+- Media:
+    - Jellyfin:
+        icon: jellyfin.png
+        href: http://192.168.1.131:8096
+        description: Media Server
+        siteMonitor: http://192.168.1.131:8096
+        widget:
+          type: jellyfin
+          url: http://192.168.1.131:8096
+          key: <jellyfin-api-key>
+          enableBlocks: true
+    - Seerr:
+        icon: overseerr.png
+        href: http://192.168.1.131:5055
+        description: Media Requests
+        siteMonitor: http://192.168.1.131:5055
+        widget:
+          type: seerr
+          url: http://192.168.1.131:5055
+          key: <seerr-api-key>
+
+- Downloads:
+    - qBittorrent:
+        icon: qbittorrent.png
+        href: http://192.168.1.131:8082
+        description: Torrent Client
+        siteMonitor: http://192.168.1.131:8082
+        widget:
+          type: qbittorrent
+          url: http://192.168.1.131:8082
+          username: <webui-username>
+          password: <webui-password>
+    - SABnzbd:
+        icon: sabnzbd.png
+        href: http://192.168.1.131:8085
+        description: Usenet Client
+        siteMonitor: http://192.168.1.131:8085
+        widget:
+          type: sabnzbd
+          url: http://192.168.1.131:8085
+          key: <sabnzbd-api-key>
+    - GlueTUN:
+        icon: gluetun.png
+        href: http://192.168.1.131:8000
+        description: VPN Container
+        siteMonitor: http://192.168.1.131:8888
+        widget:
+          type: gluetun
+          url: http://192.168.1.131:8000
+
+- Management:
+    - Sonarr:
+        icon: sonarr.png
+        href: http://192.168.1.131:8989
+        description: TV & Anime
+        siteMonitor: http://192.168.1.131:8989
+        widget:
+          type: sonarr
+          url: http://192.168.1.131:8989
+          key: <sonarr-api-key>
+    - Radarr:
+        icon: radarr.png
+        href: http://192.168.1.131:7878
+        description: Movies
+        siteMonitor: http://192.168.1.131:7878
+        widget:
+          type: radarr
+          url: http://192.168.1.131:7878
+          key: <radarr-api-key>
+    - Prowlarr:
+        icon: prowlarr.png
+        href: http://192.168.1.131:9696
+        description: Indexer Manager
+        siteMonitor: http://192.168.1.131:9696
+        widget:
+          type: prowlarr
+          url: http://192.168.1.131:9696
+          key: <prowlarr-api-key>
+
+- Tools:
+    - Code Server:
+        icon: vscode.png
+        href: http://192.168.1.131:8443
+        description: VS Code Editor
+        siteMonitor: http://192.168.1.131:8443
+    - Homepage:
+        icon: homepage.png
+        href: http://192.168.1.131:3000
+        description: Dashboard
+        siteMonitor: http://192.168.1.131:3000
+    - Tailscale:
+        icon: tailscale.png
+        href: https://login.tailscale.com/admin/machines
+        description: Remote Access
+        widget:
+          type: tailscale
+          deviceid: <tailscale-device-id>
+          key: <tailscale-api-key>
+    - TrueNAS:
+        icon: truenas.png
+        href: http://192.168.1.131
+        description: NAS Management
+        siteMonitor: http://192.168.1.131

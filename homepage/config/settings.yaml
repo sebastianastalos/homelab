@@ -1,0 +1,19 @@
+title: NAS
+headerStyle: clean
+background:
+  image: https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920
+  blur: sm
+  opacity: 30
+cardBlur: md
+hideVersion: true
+statusStyle: dot
+columns: 2
+layout:
+  Media:
+    columns: 1
+  Downloads:
+    columns: 1
+  Management:
+    columns: 1
+  Tools:
+    columns: 1
