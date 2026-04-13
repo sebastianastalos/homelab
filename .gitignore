@@ -1,11 +1,7 @@
-# ==========================================================================
-# Secrets — NEVER commit
-# ==========================================================================
+# secrets
 **/.env
 **/.env.*
 !**/.env.example
-
-# Any stray key / cert / credential files
 *.key
 *.pem
 *.crt
@@ -16,21 +12,14 @@
 *.authkey
 *credentials*
 
-# ==========================================================================
-# VPN configuration (WireGuard private keys, provider server lists)
-# ==========================================================================
+# vpn
 gluetun/config/
 *.conf
 
-# ==========================================================================
-# Tailscale runtime state (contains node identity / keys)
-# ==========================================================================
+# tailscale state
 tailscale/state/
 
-# ==========================================================================
-# Service runtime data (contain API keys in config.xml, databases, caches,
-# logs, sessions, etc.). These are per-install state, not source of truth.
-# ==========================================================================
+# service runtime data
 jellyfin/config/
 sonarr/config/
 radarr/config/
@@ -40,20 +29,14 @@ sabnzbd/config/
 seerr/config/
 code-server/config/
 
-# ==========================================================================
-# Homepage — commit user-authored yaml, but services.yaml has API keys
-# ==========================================================================
+# homepage — services.yaml has api keys
 homepage/config/services.yaml
 
-# ==========================================================================
-# User content — media & downloads (also way too big for git)
-# ==========================================================================
+# user content
 media/
 downloads/
 
-# ==========================================================================
-# Databases / WAL files / logs (safety net if any leak out of config/)
-# ==========================================================================
+# databases / logs
 *.db
 *.db-shm
 *.db-wal
@@ -63,14 +46,10 @@ downloads/
 logs/
 Logs/
 
-# ==========================================================================
-# Local-only docs (personal notes, Claude Code memory)
-# ==========================================================================
+# local-only
 CLAUDE.md
 
-# ==========================================================================
-# OS / editor cruft
-# ==========================================================================
+# os / editor
 .DS_Store
 Thumbs.db
 Desktop.ini

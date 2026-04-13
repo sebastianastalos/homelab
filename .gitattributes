@@ -1,7 +1,5 @@
-# Normalize line endings across platforms
 * text=auto eol=lf
 
-# Explicit text files
 *.md       text eol=lf
 *.yml      text eol=lf
 *.yaml     text eol=lf
@@ -11,7 +9,6 @@
 *.example  text eol=lf
 *.sh       text eol=lf
 
-# Binary — do not diff / normalize
 *.png      binary
 *.jpg      binary
 *.jpeg     binary
@@ -20,3 +17,7 @@
 *.pdf      binary
 *.db       binary
 *.sqlite   binary
+
+# force yaml into github language bar
+*.yml      linguist-detectable=true
+*.yaml     linguist-detectable=true
