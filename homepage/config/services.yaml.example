@@ -1,93 +1,93 @@
 - Media:
     - Jellyfin:
         icon: jellyfin.png
-        href: http://192.168.1.131:8096
+        href: http://<your-nas-ip>:8096
         description: Media Server
-        siteMonitor: http://192.168.1.131:8096
+        siteMonitor: http://<your-nas-ip>:8096
         widget:
           type: jellyfin
-          url: http://192.168.1.131:8096
+          url: http://<your-nas-ip>:8096
           key: <jellyfin-api-key>
           enableBlocks: true
     - Seerr:
         icon: overseerr.png
-        href: http://192.168.1.131:5055
+        href: http://<your-nas-ip>:5055
         description: Media Requests
-        siteMonitor: http://192.168.1.131:5055
+        siteMonitor: http://<your-nas-ip>:5055
         widget:
           type: seerr
-          url: http://192.168.1.131:5055
+          url: http://<your-nas-ip>:5055
           key: <seerr-api-key>
 
 - Downloads:
     - qBittorrent:
         icon: qbittorrent.png
-        href: http://192.168.1.131:8082
+        href: http://<your-nas-ip>:8082
         description: Torrent Client
-        siteMonitor: http://192.168.1.131:8082
+        siteMonitor: http://<your-nas-ip>:8082
         widget:
           type: qbittorrent
-          url: http://192.168.1.131:8082
+          url: http://<your-nas-ip>:8082
           username: <webui-username>
           password: <webui-password>
     - SABnzbd:
         icon: sabnzbd.png
-        href: http://192.168.1.131:8085
+        href: http://<your-nas-ip>:8085
         description: Usenet Client
-        siteMonitor: http://192.168.1.131:8085
+        siteMonitor: http://<your-nas-ip>:8085
         widget:
           type: sabnzbd
-          url: http://192.168.1.131:8085
+          url: http://<your-nas-ip>:8085
           key: <sabnzbd-api-key>
     - GlueTUN:
         icon: gluetun.png
-        href: http://192.168.1.131:8000
+        href: http://<your-nas-ip>:8000
         description: VPN Container
-        siteMonitor: http://192.168.1.131:8888
+        siteMonitor: http://<your-nas-ip>:8888
         widget:
           type: gluetun
-          url: http://192.168.1.131:8000
+          url: http://<your-nas-ip>:8000
 
 - Management:
     - Sonarr:
         icon: sonarr.png
-        href: http://192.168.1.131:8989
+        href: http://<your-nas-ip>:8989
         description: TV & Anime
-        siteMonitor: http://192.168.1.131:8989
+        siteMonitor: http://<your-nas-ip>:8989
         widget:
           type: sonarr
-          url: http://192.168.1.131:8989
+          url: http://<your-nas-ip>:8989
           key: <sonarr-api-key>
     - Radarr:
         icon: radarr.png
-        href: http://192.168.1.131:7878
+        href: http://<your-nas-ip>:7878
         description: Movies
-        siteMonitor: http://192.168.1.131:7878
+        siteMonitor: http://<your-nas-ip>:7878
         widget:
           type: radarr
-          url: http://192.168.1.131:7878
+          url: http://<your-nas-ip>:7878
           key: <radarr-api-key>
     - Prowlarr:
         icon: prowlarr.png
-        href: http://192.168.1.131:9696
+        href: http://<your-nas-ip>:9696
         description: Indexer Manager
-        siteMonitor: http://192.168.1.131:9696
+        siteMonitor: http://<your-nas-ip>:9696
         widget:
           type: prowlarr
-          url: http://192.168.1.131:9696
+          url: http://<your-nas-ip>:9696
           key: <prowlarr-api-key>
 
 - Tools:
     - Code Server:
         icon: vscode.png
-        href: http://192.168.1.131:8443
+        href: http://<your-nas-ip>:8443
         description: VS Code Editor
-        siteMonitor: http://192.168.1.131:8443
+        siteMonitor: http://<your-nas-ip>:8443
     - Homepage:
         icon: homepage.png
-        href: http://192.168.1.131:3000
+        href: http://<your-nas-ip>:3000
         description: Dashboard
-        siteMonitor: http://192.168.1.131:3000
+        siteMonitor: http://<your-nas-ip>:3000
     - Tailscale:
         icon: tailscale.png
         href: https://login.tailscale.com/admin/machines
@@ -98,6 +98,6 @@
           key: <tailscale-api-key>
     - TrueNAS:
         icon: truenas.png
-        href: http://192.168.1.131
+        href: http://<your-nas-ip>
         description: NAS Management
-        siteMonitor: http://192.168.1.131
+        siteMonitor: http://<your-nas-ip>
