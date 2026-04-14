@@ -1,0 +1,25 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "docker-compose": {
+    "fileMatch": ["(^|/).+docker-compose\\.yml$"]
+  },
+  "packageRules": [
+    {
+      "matchManagers": ["docker-compose"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": false,
+      "labels": ["dependencies", "docker"]
+    },
+    {
+      "matchManagers": ["docker-compose"],
+      "matchUpdateTypes": ["major"],
+      "labels": ["dependencies", "docker", "major"]
+    },
+    {
+      "matchPackageNames": ["ghcr.io/immich-app/**"],
+      "enabled": false,
+      "description": "immich pinned to v2 rolling tag, managed manually"
+    }
+  ]
+}
