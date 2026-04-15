@@ -12,7 +12,7 @@ See [Project Board](https://github.com/users/sebastianastalos/projects/1)
 
 | Name    | Device             | CPU            | RAM       | Storage                              |
 | ------- | ------------------ | -------------- | --------- | ------------------------------------ |
-| truenas | UGREEN DXP4800 Pro | Intel i5-1235U | 16GB DDR5 | 2x Seagate IronWolf 4TB (ZFS mirror) |
+| truenas | UGREEN DXP4800 Pro | Intel i3-1315U | 16GB DDR5 | 2x Seagate IronWolf 4TB (ZFS mirror) |
 
 ## Services
 
