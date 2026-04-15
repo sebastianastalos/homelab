@@ -20,6 +20,11 @@
       "matchPackageNames": ["ghcr.io/immich-app/**"],
       "enabled": false,
       "description": "immich pinned to v2 rolling tag, managed manually"
+    },
+    {
+      "matchPackageNames": ["lscr.io/linuxserver/qbittorrent"],
+      "allowedVersions": "<10.0.0",
+      "description": "block bogus Ubuntu-version tags (e.g. 20.04.1 = qBit 4.3 from 2021). See runtipi/runtipi#1640"
     }
   ]
 }
