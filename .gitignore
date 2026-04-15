@@ -35,8 +35,11 @@ immich/postgres/
 homepage/config/services.yaml
 
 # user content
-media/
+mediadata/
+# legacy datasets — pinned in code-server's namespace until next reboot, then removable
+data/
 downloads/
+media/
 
 # databases / logs
 *.db

@@ -6,7 +6,7 @@ services:
       - .env
     volumes:
       - /mnt/storage/sabnzbd/config:/config
-      - /mnt/storage/data:/data
+      - /mnt/storage/mediadata/data:/data
     ports:
       - 8085:8080
     restart: unless-stopped

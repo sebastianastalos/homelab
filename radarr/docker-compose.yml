@@ -6,8 +6,8 @@ services:
       - .env
     volumes:
       - /mnt/storage/radarr/config:/config
-      - /mnt/storage/media:/media
-      - /mnt/storage/data:/data
+      - /mnt/storage/mediadata/media:/media
+      - /mnt/storage/mediadata/data:/data
     ports:
       - 7878:7878
     restart: unless-stopped

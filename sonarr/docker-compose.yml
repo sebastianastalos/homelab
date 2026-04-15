@@ -6,8 +6,8 @@ services:
       - .env
     volumes:
       - /mnt/storage/sonarr/config:/config
-      - /mnt/storage/media:/media
-      - /mnt/storage/data:/data
+      - /mnt/storage/mediadata/media:/media
+      - /mnt/storage/mediadata/data:/data
     ports:
       - 8989:8989
     restart: unless-stopped

@@ -7,5 +7,5 @@ services:
       - .env
     volumes:
       - /mnt/storage/qbittorrent/config:/config
-      - /mnt/storage/data:/data
+      - /mnt/storage/mediadata/data:/data
     restart: unless-stopped
