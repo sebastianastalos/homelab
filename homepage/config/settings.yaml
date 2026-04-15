@@ -7,13 +7,12 @@ background:
 cardBlur: md
 hideVersion: true
 statusStyle: dot
-columns: 2
 layout:
   Media:
-    columns: 1
+    style: column
+  Arr Stack:
+    style: column
   Downloads:
-    columns: 1
-  Management:
-    columns: 1
-  Tools:
-    columns: 1
+    style: column
+  System:
+    style: column

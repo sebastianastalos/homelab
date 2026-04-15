@@ -18,6 +18,45 @@
           type: seerr
           url: http://<your-nas-ip>:5055
           key: <seerr-api-key>
+    - Immich:
+        icon: immich.png
+        href: http://<your-nas-ip>:2283
+        description: Photo Backup
+        siteMonitor: http://<your-nas-ip>:2283
+
+- Arr Stack:
+    - Sonarr:
+        icon: sonarr.png
+        href: http://<your-nas-ip>:8989
+        description: TV & Anime
+        siteMonitor: http://<your-nas-ip>:8989
+        widget:
+          type: sonarr
+          url: http://<your-nas-ip>:8989
+          key: <sonarr-api-key>
+    - Radarr:
+        icon: radarr.png
+        href: http://<your-nas-ip>:7878
+        description: Movies
+        siteMonitor: http://<your-nas-ip>:7878
+        widget:
+          type: radarr
+          url: http://<your-nas-ip>:7878
+          key: <radarr-api-key>
+    - Prowlarr:
+        icon: prowlarr.png
+        href: http://<your-nas-ip>:9696
+        description: Indexer Manager
+        siteMonitor: http://<your-nas-ip>:9696
+        widget:
+          type: prowlarr
+          url: http://<your-nas-ip>:9696
+          key: <prowlarr-api-key>
+    - Profilarr:
+        icon: mdi-tune-variant
+        href: http://<your-nas-ip>:6868
+        description: Quality Profiles
+        siteMonitor: http://<your-nas-ip>:6868
 
 - Downloads:
     - qBittorrent:
@@ -48,46 +87,22 @@
           type: gluetun
           url: http://<your-nas-ip>:8000
 
-- Management:
-    - Sonarr:
-        icon: sonarr.png
-        href: http://<your-nas-ip>:8989
-        description: TV & Anime
-        siteMonitor: http://<your-nas-ip>:8989
-        widget:
-          type: sonarr
-          url: http://<your-nas-ip>:8989
-          key: <sonarr-api-key>
-    - Radarr:
-        icon: radarr.png
-        href: http://<your-nas-ip>:7878
-        description: Movies
-        siteMonitor: http://<your-nas-ip>:7878
-        widget:
-          type: radarr
-          url: http://<your-nas-ip>:7878
-          key: <radarr-api-key>
-    - Prowlarr:
-        icon: prowlarr.png
-        href: http://<your-nas-ip>:9696
-        description: Indexer Manager
-        siteMonitor: http://<your-nas-ip>:9696
-        widget:
-          type: prowlarr
-          url: http://<your-nas-ip>:9696
-          key: <prowlarr-api-key>
-
-- Tools:
-    - Code Server:
-        icon: vscode.png
-        href: http://<your-nas-ip>:8443
-        description: VS Code Editor
-        siteMonitor: http://<your-nas-ip>:8443
+- System:
+    - TrueNAS:
+        icon: truenas.png
+        href: http://<your-nas-ip>
+        description: NAS Management
+        siteMonitor: http://<your-nas-ip>
     - Homepage:
         icon: homepage.png
         href: http://<your-nas-ip>:3000
         description: Dashboard
         siteMonitor: http://<your-nas-ip>:3000
+    - Code Server:
+        icon: vscode.png
+        href: http://<your-nas-ip>:8443
+        description: VS Code Editor
+        siteMonitor: http://<your-nas-ip>:8443
     - Tailscale:
         icon: tailscale.png
         href: https://login.tailscale.com/admin/machines
@@ -96,8 +111,3 @@
           type: tailscale
           deviceid: <tailscale-device-id>
           key: <tailscale-api-key>
-    - TrueNAS:
-        icon: truenas.png
-        href: http://<your-nas-ip>
-        description: NAS Management
-        siteMonitor: http://<your-nas-ip>
