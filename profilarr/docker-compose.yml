@@ -1,0 +1,11 @@
+services:
+  profilarr:
+    image: santiagosayshey/profilarr:v1.1.4
+    container_name: profilarr
+    env_file:
+      - .env
+    ports:
+      - "6868:6868"
+    volumes:
+      - /mnt/storage/profilarr/config:/config
+    restart: unless-stopped
