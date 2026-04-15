@@ -2,10 +2,8 @@ services:
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:10.11.8
     container_name: jellyfin
-    environment:
-      - PUID=950
-      - PGID=950
-      - TZ=Europe/London
+    env_file:
+      - .env
     volumes:
       - /mnt/storage/jellyfin/config:/config
       - /mnt/storage/media:/data/media

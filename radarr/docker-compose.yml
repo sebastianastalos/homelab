@@ -2,10 +2,8 @@ services:
   radarr:
     image: lscr.io/linuxserver/radarr:6.1.1
     container_name: radarr
-    environment:
-      - PUID=950
-      - PGID=950
-      - TZ=Europe/London
+    env_file:
+      - .env
     volumes:
       - /mnt/storage/radarr/config:/config
       - /mnt/storage/media:/media
