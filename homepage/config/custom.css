@@ -1,3 +1,19 @@
 #information-widgets {
   display: none !important;
 }
+
+/* Padding around each group so they're not touching neighbors */
+.services-group {
+  padding: 0.75rem 1rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+/* Breathing room under the group title */
+.service-group-name {
+  margin-bottom: 0.75rem !important;
+}
+
+/* Slight gap between service cards within a group */
+.services-group .flex-col {
+  gap: 0.5rem !important;
+}
