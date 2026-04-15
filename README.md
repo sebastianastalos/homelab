@@ -1,3 +1,5 @@
+[![gitleaks](https://github.com/sebastianastalos/homelab/actions/workflows/gitleaks.yml/badge.svg)](https://github.com/sebastianastalos/homelab/actions/workflows/gitleaks.yml)
+
 Docker Compose configurations for my self-hosted homelab running on TrueNAS Scale.
 
 | Hardware                                                                              | OS                                                                                                                   | Tools                                                                                        | Networking                                                                                           |
