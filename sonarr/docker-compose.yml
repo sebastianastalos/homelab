@@ -8,9 +8,8 @@ services:
       - TZ=Europe/London
     volumes:
       - /mnt/storage/sonarr/config:/config
-      - /mnt/storage/media/tvshows:/tv
-      - /mnt/storage/media/anime:/anime
-      - /mnt/storage/downloads:/downloads
+      - /mnt/storage/media:/media
+      - /mnt/storage/data:/data
     ports:
       - 8989:8989
     restart: unless-stopped

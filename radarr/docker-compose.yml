@@ -8,8 +8,8 @@ services:
       - TZ=Europe/London
     volumes:
       - /mnt/storage/radarr/config:/config
-      - /mnt/storage/media/movies:/movies
-      - /mnt/storage/downloads:/downloads
+      - /mnt/storage/media:/media
+      - /mnt/storage/data:/data
     ports:
       - 7878:7878
     restart: unless-stopped
