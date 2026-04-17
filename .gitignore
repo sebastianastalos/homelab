@@ -30,6 +30,8 @@ seerr/config/
 code-server/config/
 immich/library/
 immich/postgres/
+profilarr/config/
+aiostreams/config/
 
 # homepage — services.yaml has api keys
 homepage/config/services.yaml

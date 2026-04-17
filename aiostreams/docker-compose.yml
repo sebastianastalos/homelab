@@ -1,0 +1,11 @@
+services:
+  aiostreams:
+    image: ghcr.io/viren070/aiostreams:v2.27.0
+    container_name: aiostreams
+    env_file:
+      - .env
+    volumes:
+      - /mnt/storage/aiostreams/config:/app/data
+    ports:
+      - 8081:3000
+    restart: unless-stopped
