@@ -32,6 +32,8 @@ immich/library/
 immich/postgres/
 profilarr/config/
 aiostreams/config/
+adguard/conf/
+adguard/work/
 
 # homepage — services.yaml has api keys
 homepage/config/services.yaml
