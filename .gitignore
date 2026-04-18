@@ -35,6 +35,8 @@ aiostreams/config/
 adguard/conf/
 adguard/work/
 ugreen-leds/
+prometheus/data/
+grafana/data/
 
 # homepage — services.yaml has api keys
 homepage/config/services.yaml
