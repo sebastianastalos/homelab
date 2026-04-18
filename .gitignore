@@ -34,6 +34,7 @@ profilarr/config/
 aiostreams/config/
 adguard/conf/
 adguard/work/
+ugreen-leds/
 
 # homepage — services.yaml has api keys
 homepage/config/services.yaml

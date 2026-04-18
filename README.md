@@ -16,6 +16,8 @@ See [Project Board](https://github.com/users/sebastianastalos/projects/1)
 | ------- | ------------------ | -------------- | --------- | ------------------------------------ |
 | truenas | UGREEN DXP4800 Pro | Intel i3-1315U | 16GB DDR5 | 2x Seagate IronWolf 4TB (ZFS mirror) |
 
+Front-panel LEDs restored via [install_ugreen_leds_controller](https://github.com/0x556c79/install_ugreen_leds_controller).
+
 ## Services
 
 | Service         | Description                                             |
