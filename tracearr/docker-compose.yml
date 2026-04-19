@@ -1,0 +1,32 @@
+services:
+  tracearr:
+    image: ghcr.io/connorgallopo/tracearr:supervised
+    container_name: tracearr
+    shm_size: 512mb
+    mem_limit: 3g
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    env_file:
+      - .env
+    volumes:
+      - tracearr_postgres:/data/postgres
+      - tracearr_redis:/data/redis
+      - tracearr_data:/data/tracearr
+      - tracearr_backups:/data/backup
+    ports:
+      - 3003:3000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:3000/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+    restart: unless-stopped
+
+volumes:
+  tracearr_postgres:
+  tracearr_redis:
+  tracearr_data:
+  tracearr_backups:
