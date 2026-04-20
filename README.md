@@ -20,16 +20,24 @@ Front-panel LEDs restored via [install_ugreen_leds_controller](https://github.co
 
 ## Services
 
-| Service         | Description                                             |
-| --------------- | ------------------------------------------------------- |
-| **Jellyfin**    | Media server with Intel Quick Sync hardware transcoding |
-| **Sonarr**      | TV show & anime library management                      |
-| **Radarr**      | Movie library management                                |
-| **Prowlarr**    | Indexer manager (routed through Gluetun VPN)            |
-| **qBittorrent** | Torrent client (routed through Gluetun VPN)             |
-| **SABnzbd**     | Usenet client (SSL, no VPN needed)                      |
-| **Gluetun**     | WireGuard VPN gateway (ProtonVPN)                       |
-| **Seerr**       | Media request portal                                    |
-| **Homepage**    | Services dashboard                                      |
-| **Tailscale**   | Remote access & exit node                               |
-| **code-server** | Web-based VS Code editor                                |
+| Service           | Description                                             |
+| ----------------- | ------------------------------------------------------- |
+| **Jellyfin**      | Media server with Intel Quick Sync hardware transcoding |
+| **Immich**        | Self-hosted photo backup and management                 |
+| **Sonarr**        | TV show & anime library management                      |
+| **Radarr**        | Movie library management                                |
+| **Prowlarr**      | Indexer manager                                         |
+| **Profilarr**     | Quality profile manager for Sonarr/Radarr               |
+| **qBittorrent**   | Torrent client                                          |
+| **SABnzbd**       | Usenet client                                           |
+| **Seerr**         | Media request portal                                    |
+| **AIOStreams**    | Stremio addon aggregator                                |
+| **Tracearr**      | Media server monitoring                                 |
+| **AdGuard Home**  | Network-wide DNS filter                                 |
+| **Gluetun**       | WireGuard VPN gateway                                   |
+| **Tailscale**     | Remote access mesh VPN                                  |
+| **Homepage**      | Services dashboard                                      |
+| **code-server**   | Web-based VS Code editor                                |
+| **Prometheus**    | Metrics storage                                         |
+| **Grafana**       | Metrics dashboards                                      |
+| **Node Exporter** | Host metrics exporter                                   |
