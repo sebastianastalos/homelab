@@ -5,7 +5,7 @@ services:
     env_file:
       - .env
     volumes:
-      - /mnt/storage/radarr/config:/config
+      - /mnt/app/radarr/config:/config
       - /mnt/storage/mediadata/media:/media
       - /mnt/storage/mediadata/data:/data
     ports:

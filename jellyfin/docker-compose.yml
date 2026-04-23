@@ -5,7 +5,7 @@ services:
     env_file:
       - .env
     volumes:
-      - /mnt/storage/jellyfin/config:/config
+      - /mnt/app/jellyfin/config:/config
       - /mnt/storage/mediadata/media:/data/media
     ports:
       - 8096:8096

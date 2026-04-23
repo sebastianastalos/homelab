@@ -6,6 +6,6 @@ services:
     env_file:
       - .env
     volumes:
-      - /mnt/storage/adguard/conf:/opt/adguardhome/conf
-      - /mnt/storage/adguard/work:/opt/adguardhome/work
+      - /mnt/app/adguard/conf:/opt/adguardhome/conf
+      - /mnt/app/adguard/work:/opt/adguardhome/work
     restart: unless-stopped

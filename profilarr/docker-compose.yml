@@ -7,5 +7,5 @@ services:
     ports:
       - "6868:6868"
     volumes:
-      - /mnt/storage/profilarr/config:/config
+      - /mnt/app/profilarr/config:/config
     restart: unless-stopped

@@ -6,5 +6,5 @@ services:
     env_file:
       - .env
     volumes:
-      - /mnt/storage/prowlarr/config:/config
+      - /mnt/app/prowlarr/config:/config
     restart: unless-stopped

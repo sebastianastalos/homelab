@@ -6,8 +6,8 @@ services:
     env_file:
       - .env
     volumes:
-      - /mnt/storage/prometheus/config:/etc/prometheus
-      - /mnt/storage/prometheus/data:/prometheus
+      - /mnt/app/prometheus/config:/etc/prometheus
+      - /mnt/app/prometheus/data:/prometheus
     command:
       - --config.file=/etc/prometheus/prometheus.yml
       - --storage.tsdb.path=/prometheus

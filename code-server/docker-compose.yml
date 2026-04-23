@@ -10,8 +10,8 @@ services:
       - PGID=${PGID:-950} #update with your groupId or update .env
     volumes:
       - ./config:/config
-      - /mnt/storage/code-server/:/code-server
-      - /mnt/storage:/mnt/storage
+      - /mnt/app/code-server/:/code-server
+      - /mnt/app:/mnt/app
 
     ports:
       - 8444:8443

@@ -7,7 +7,7 @@ services:
     environment:
       HOMEPAGE_ALLOWED_HOSTS: ${NAS_IP}:3000,100.111.232.12:3000,truenas.mullet-snapper.ts.net:3000
     volumes:
-      - /mnt/storage/homepage/config:/app/config
+      - /mnt/app/homepage/config:/app/config
       - /var/run/docker.sock:/var/run/docker.sock:ro
     ports:
       - 3000:3000

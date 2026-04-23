@@ -5,7 +5,7 @@ services:
     env_file:
       - .env
     volumes:
-      - /mnt/storage/aiostreams/config:/app/data
+      - /mnt/app/aiostreams/config:/app/data
     ports:
       - 8081:3000
     restart: unless-stopped
