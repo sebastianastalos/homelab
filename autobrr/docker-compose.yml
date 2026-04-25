@@ -1,0 +1,11 @@
+services:
+  autobrr:
+    image: ghcr.io/autobrr/autobrr:latest
+    container_name: autobrr
+    user: "950:950"
+    env_file: .env
+    volumes:
+      - /mnt/app/autobrr/config:/config
+    ports:
+      - "7474:7474"
+    restart: unless-stopped
