@@ -1,0 +1,13 @@
+services:
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    user: "950:950"
+    env_file: .env
+    volumes:
+      - /mnt/app/loki/config/loki.yml:/etc/loki/loki.yml:ro
+      - /mnt/app/loki/data:/loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/loki.yml
+    restart: unless-stopped
