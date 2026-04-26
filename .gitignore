@@ -41,16 +41,13 @@ grafana/data/
 scrutiny/config/
 scrutiny/influxdb/
 autobrr/config/
+loki/data/
 
-# homepage — services.yaml has api keys
+# homepage 
 homepage/config/services.yaml
 
 # user content
 mediadata/
-# legacy datasets — pinned in code-server's namespace until next reboot, then removable
-data/
-downloads/
-media/
 
 # databases / logs
 *.db

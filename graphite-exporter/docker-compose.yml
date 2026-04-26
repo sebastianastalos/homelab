@@ -1,0 +1,13 @@
+services:
+  graphite-exporter:
+    image: prom/graphite-exporter:latest
+    container_name: graphite-exporter
+    env_file: .env
+    volumes:
+      - /mnt/app/graphite-exporter/config/mappings.yml:/tmp/mappings.yml:ro
+    command: --graphite.mapping-config=/tmp/mappings.yml
+    ports:
+      - "9109:9108"
+      - "2003:9109"
+      - "2003:9109/udp"
+    restart: unless-stopped
