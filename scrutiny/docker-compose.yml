@@ -1,0 +1,13 @@
+services:
+  scrutiny:
+    image: ghcr.io/analogj/scrutiny:master-omnibus
+    container_name: scrutiny
+    env_file: .env
+    privileged: true
+    volumes:
+      - /mnt/app/scrutiny/config:/opt/scrutiny/config
+      - /mnt/app/scrutiny/influxdb:/opt/scrutiny/influxdb
+      - /run/udev:/run/udev:ro
+    ports:
+      - "8086:8080"
+    restart: unless-stopped
