@@ -6,11 +6,8 @@ Docker Compose configurations for my self-hosted homelab running on TrueNAS Scal
 | ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | [![UGREEN](https://img.shields.io/badge/-UGREEN_DXP4800_Pro-black?logo=ugreen&logoColor=white)](https://nas.ugreen.com) | [![TrueNAS](https://img.shields.io/badge/-TrueNAS_Scale-black?logo=truenas)](https://www.truenas.com/truenas-scale/) | [![Docker](https://img.shields.io/badge/-Docker-black?logo=docker)](https://www.docker.com/) [![Renovate](https://img.shields.io/badge/-Renovate-black?logo=renovate)](https://docs.renovatebot.com/) | [![Tailscale](https://img.shields.io/badge/-Tailscale-black?logo=tailscale)](https://tailscale.com/) | [![GitHub Actions](https://img.shields.io/badge/-GitHub_Actions-black?logo=githubactions)](https://github.com/features/actions) |
 
-## 📍 To-Do
-
-See [Project Board](https://github.com/users/sebastianastalos/projects/1)
-
-## Hardware
+<details>
+<summary>Hardware</summary>
 
 | Name    | Device             | CPU            | RAM       | Storage                              |
 | ------- | ------------------ | -------------- | --------- | ------------------------------------ |
@@ -18,7 +15,10 @@ See [Project Board](https://github.com/users/sebastianastalos/projects/1)
 
 Front-panel LEDs restored via [install_ugreen_leds_controller](https://github.com/0x556c79/install_ugreen_leds_controller).
 
-## Services
+</details>
+
+<details>
+<summary>Services</summary>
 
 | Service           | Description                                             |
 | ----------------- | ------------------------------------------------------- |
@@ -47,3 +47,5 @@ Front-panel LEDs restored via [install_ugreen_leds_controller](https://github.co
 | **Dozzle**        | Real-time Docker log viewer                             |
 | **Scrutiny**      | Hard drive S.M.A.R.T. health monitoring                 |
 | **Autobrr**       | Torrent automation                                      |
+
+</details>
