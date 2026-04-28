@@ -17,3 +17,12 @@
 .services-group .flex-col {
   gap: 0.5rem !important;
 }
+
+/* Service card hover effect */
+.service {
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.service:hover {
+  transform: translateY(-3px) !important;
+}

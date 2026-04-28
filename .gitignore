@@ -42,6 +42,8 @@ scrutiny/config/
 scrutiny/influxdb/
 autobrr/config/
 loki/data/
+nginx/data/
+nginx/letsencrypt/
 
 # homepage 
 homepage/config/services.yaml

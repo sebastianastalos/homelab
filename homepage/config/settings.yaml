@@ -1,7 +1,7 @@
 title: NAS
 headerStyle: clean
 background:
-  image: https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920
+  image: https://images.unsplash.com/photo-1516821371801-280cf8069a4e?w=1920
   blur: sm
   opacity: 30
 cardBlur: md
@@ -11,10 +11,10 @@ columns: 1
 layout:
   Media:
     style: row
-    columns: 3
+    columns: 4
   Arr Stack:
     style: row
-    columns: 5
+    columns: 3
   Downloads:
     style: row
     columns: 2
@@ -23,4 +23,4 @@ layout:
     columns: 3
   System:
     style: row
-    columns: 4
+    columns: 5
