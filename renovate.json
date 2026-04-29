@@ -25,6 +25,11 @@
       "matchPackageNames": ["lscr.io/linuxserver/qbittorrent"],
       "allowedVersions": "<10.0.0",
       "description": "block bogus Ubuntu-version tags (e.g. 20.04.1 = qBit 4.3 from 2021). See runtipi/runtipi#1640"
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "automerge": false,
+      "labels": ["dependencies", "github-actions"]
     }
   ]
 }
