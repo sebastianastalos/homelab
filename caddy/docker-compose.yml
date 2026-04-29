@@ -1,0 +1,13 @@
+services:
+  caddy:
+    build: .
+    container_name: caddy
+    env_file: .env
+    volumes:
+      - /mnt/app/caddy/config/Caddyfile:/etc/caddy/Caddyfile:ro
+      - /mnt/app/caddy/data:/data
+      - /mnt/app/caddy/config/caddy:/config
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: unless-stopped

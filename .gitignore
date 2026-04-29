@@ -44,6 +44,7 @@ autobrr/config/
 loki/data/
 nginx/data/
 nginx/letsencrypt/
+caddy/data/
 
 # homepage 
 homepage/config/services.yaml

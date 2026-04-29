@@ -1,0 +1,68 @@
+{
+    acme_dns porkbun {
+        api_key {env.PORKBUN_API_KEY}
+        api_secret_key {env.PORKBUN_SECRET_API_KEY}
+    }
+}
+
+jellyfin.sebastianastalos.com {
+    reverse_proxy 192.168.1.131:8096 {
+        header_up Host {upstream_hostport}
+    }
+}
+
+immich.sebastianastalos.com {
+    reverse_proxy 192.168.1.131:2283
+}
+
+seerr.sebastianastalos.com {
+    reverse_proxy 192.168.1.131:5055
+}
+
+sonarr.sebastianastalos.com {
+    reverse_proxy 192.168.1.131:8989
+}
+
+radarr.sebastianastalos.com {
+    reverse_proxy 192.168.1.131:7878
+}
+
+prowlarr.sebastianastalos.com {
+    reverse_proxy 192.168.1.131:9696
+}
+
+bazarr.sebastianastalos.com {
+    reverse_proxy 192.168.1.131:6767
+}
+
+autobrr.sebastianastalos.com {
+    reverse_proxy 192.168.1.131:7474
+}
+
+grafana.sebastianastalos.com {
+    reverse_proxy 192.168.1.131:3002
+}
+
+dozzle.sebastianastalos.com {
+    reverse_proxy 192.168.1.131:9999
+}
+
+scrutiny.sebastianastalos.com {
+    reverse_proxy 192.168.1.131:8086
+}
+
+truenas.sebastianastalos.com {
+    reverse_proxy 192.168.1.131:81
+}
+
+npm.sebastianastalos.com {
+    reverse_proxy 192.168.1.131:8181
+}
+
+home.sebastianastalos.com {
+    reverse_proxy 192.168.1.131:3000
+}
+
+adguard.sebastianastalos.com {
+    reverse_proxy 192.168.1.131:8070
+}
