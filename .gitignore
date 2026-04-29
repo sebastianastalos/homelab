@@ -45,6 +45,7 @@ loki/data/
 nginx/data/
 nginx/letsencrypt/
 caddy/data/
+caddy/config/caddy/
 
 # homepage 
 homepage/config/services.yaml
