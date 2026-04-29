@@ -9,6 +9,7 @@
 *.p12
 *.keystore
 *secret*
+!.github/workflows/secrets.yml
 *.authkey
 *credentials*
 
