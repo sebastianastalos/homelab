@@ -46,6 +46,7 @@ loki/data/
 nginx/data/
 nginx/letsencrypt/
 caddy/data/
+isponsorblocktv/config/
 caddy/config/caddy/
 
 # homepage 
