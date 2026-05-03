@@ -48,5 +48,9 @@ Front-panel LEDs restored via [install_ugreen_leds_controller](https://github.co
 | **Dozzle**        | Real-time Docker log viewer                             |
 | **Scrutiny**      | Hard drive S.M.A.R.T. health monitoring                 |
 | **Autobrr**       | Torrent automation                                      |
+| **Graphite Exporter** | TrueNAS metrics bridge for Prometheus               |
+| **Nginx Proxy Manager** | Local reverse proxy                               |
+| **Caddy**         | HTTPS reverse proxy with Let's Encrypt via Porkbun DNS  |
+| **iSponsorBlockTV** | SponsorBlock for Apple TV / YouTube TV              |
 
 </details>
