@@ -1,6 +1,6 @@
 services:
   aiostreams:
-    image: ghcr.io/viren070/aiostreams:v2.28.0
+    image: ghcr.io/viren070/aiostreams:v2.29.0
     container_name: aiostreams
     env_file:
       - .env
