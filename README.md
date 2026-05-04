@@ -76,5 +76,6 @@ Front-panel LEDs restored via [install_ugreen_leds_controller](https://github.co
 | **Nginx Proxy Manager** | Local reverse proxy |
 | **Caddy** | HTTPS reverse proxy with Let's Encrypt via Porkbun DNS |
 | **iSponsorBlockTV** | SponsorBlock for Apple TV / YouTube TV |
+| **Paperless-ngx** | Document management and OCR |
 
 </details>
