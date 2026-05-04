@@ -47,6 +47,11 @@ nginx/data/
 nginx/letsencrypt/
 caddy/data/
 isponsorblocktv/config/
+paperless/data/
+paperless/media/
+paperless/db/
+paperless/export/
+paperless/consume/
 caddy/config/caddy/
 
 # homepage 

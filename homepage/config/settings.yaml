@@ -15,6 +15,9 @@ layout:
   Arr Stack:
     style: row
     columns: 3
+  Documents:
+    style: row
+    columns: 1
   Downloads:
     style: row
     columns: 2

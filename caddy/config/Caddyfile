@@ -75,6 +75,10 @@ tracearr.sebastianastalos.com {
     reverse_proxy 192.168.1.131:3003
 }
 
+paperless.sebastianastalos.com {
+    reverse_proxy 192.168.1.131:8010
+}
+
 adguard.sebastianastalos.com {
     reverse_proxy 192.168.1.131:8070 {
         header_up Host {upstream_hostport}

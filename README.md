@@ -5,7 +5,7 @@
 
 # homelab
 
-My homelab runs entirely on a **UGREEN DXP4800 Pro** — UGOS replaced with TrueNAS Scale for full control over storage and services.
+My homelab runs entirely on a **UGREEN DXP4800 Pro** - UGOS replaced with TrueNAS Scale for full control over storage and services.
 
 Everything is containerised and managed with Docker Compose. Renovate keeps services updated by opening PRs for new image versions, and GitHub Actions runs Gitleaks on every push and PR to catch leaked secrets before they land in the repo.
 
