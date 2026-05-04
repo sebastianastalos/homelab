@@ -16,7 +16,7 @@ services:
     restart: unless-stopped
 
   paperless-db:
-    image: postgres:17
+    image: postgres:18
     container_name: paperless-db
     env_file: .env
     volumes:
