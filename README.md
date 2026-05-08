@@ -2,11 +2,6 @@
 [![Secrets](https://github.com/sebastianastalos/homelab/actions/workflows/secrets.yml/badge.svg)](https://github.com/sebastianastalos/homelab/actions/workflows/secrets.yml)
 [![Deploy](https://github.com/sebastianastalos/homelab/actions/workflows/deploy.yml/badge.svg)](https://github.com/sebastianastalos/homelab/actions/workflows/deploy.yml)
 
-![CPU](https://img.shields.io/badge/CPU-Intel_i3--1315U-black)
-![RAM](https://img.shields.io/badge/RAM-16GB_DDR5-black)
-![Storage](https://img.shields.io/badge/Storage-2×4TB_ZFS_Mirror-black)
-![NVMe](https://img.shields.io/badge/NVMe-500GB_Samsung_980_Pro-black)
-
 <div align="center">
 
 # homelab
