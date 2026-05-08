@@ -1,5 +1,12 @@
 [![Gitleaks](https://github.com/sebastianastalos/homelab/actions/workflows/gitleaks.yml/badge.svg)](https://github.com/sebastianastalos/homelab/actions/workflows/gitleaks.yml)
 [![Secrets](https://github.com/sebastianastalos/homelab/actions/workflows/secrets.yml/badge.svg)](https://github.com/sebastianastalos/homelab/actions/workflows/secrets.yml)
+[![Deploy](https://github.com/sebastianastalos/homelab/actions/workflows/deploy.yml/badge.svg)](https://github.com/sebastianastalos/homelab/actions/workflows/deploy.yml)
+[![Metrics](https://github.com/sebastianastalos/homelab/actions/workflows/metrics.yml/badge.svg)](https://github.com/sebastianastalos/homelab/actions/workflows/metrics.yml)
+
+![CPU](https://img.shields.io/badge/dynamic/json?url=https://raw.githubusercontent.com/sebastianastalos/homelab/main/.github/metrics/metrics.json&query=$.cpu&suffix=%25&label=CPU&color=black)
+![RAM](https://img.shields.io/badge/dynamic/json?url=https://raw.githubusercontent.com/sebastianastalos/homelab/main/.github/metrics/metrics.json&query=$.ram&suffix=%25&label=RAM&color=black)
+![Uptime](https://img.shields.io/badge/dynamic/json?url=https://raw.githubusercontent.com/sebastianastalos/homelab/main/.github/metrics/metrics.json&query=$.uptime_days&suffix=d&label=Uptime&color=black)
+![Disk](https://img.shields.io/badge/dynamic/json?url=https://raw.githubusercontent.com/sebastianastalos/homelab/main/.github/metrics/metrics.json&query=$.disk&suffix=%25&label=Disk&color=black)
 
 <div align="center">
 

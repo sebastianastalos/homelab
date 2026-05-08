@@ -1,0 +1,44 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**/docker-compose.yml'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Get changed compose files
+        id: changed
+        run: |
+          CHANGED=$(git diff --name-only HEAD~1 HEAD | grep 'docker-compose.yml' | sed 's|/docker-compose.yml||')
+          echo "apps=$CHANGED" >> $GITHUB_OUTPUT
+          echo "Changed apps: $CHANGED"
+
+      - name: Deploy changed apps
+        if: steps.changed.outputs.apps != ''
+        uses: appleboy/ssh-action@v1
+        with:
+          host: 192.168.1.131
+          username: truenas_admin
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            EXCLUDED="caddy tailscale gluetun immich paperless"
+            for APP in ${{ steps.changed.outputs.apps }}; do
+              if echo "$EXCLUDED" | grep -qw "$APP"; then
+                echo "Skipping $APP (excluded from auto-deploy)"
+                continue
+              fi
+              echo "Restarting $APP..."
+              cd /mnt/app/$APP
+              sudo docker compose pull
+              sudo docker compose up -d
+            done
