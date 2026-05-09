@@ -14,3 +14,7 @@ scrape_configs:
   - job_name: graphite
     static_configs:
       - targets: ['192.168.1.131:9109']
+
+  - job_name: cadvisor
+    static_configs:
+      - targets: ['192.168.1.131:8090']
