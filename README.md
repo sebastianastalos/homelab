@@ -79,5 +79,6 @@ Front-panel LEDs restored via [install_ugreen_leds_controller](https://github.co
 | **iSponsorBlockTV** | SponsorBlock for Apple TV / YouTube TV |
 | **Paperless-ngx** | Document management and OCR |
 | **GitHub Runner** | Self-hosted GitHub Actions runner |
+| **cAdvisor** | Docker container metrics exporter |
 
 </details>
