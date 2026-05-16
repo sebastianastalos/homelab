@@ -48,6 +48,9 @@ nginx/letsencrypt/
 caddy/data/
 isponsorblocktv/config/
 paperless/data/
+ntfy/data/
+ntfy/config/
+uptime-kuma/data/
 paperless/media/
 paperless/db/
 paperless/export/

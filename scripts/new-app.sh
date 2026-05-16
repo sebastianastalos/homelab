@@ -8,6 +8,11 @@ if [ -z "$APP" ]; then
     exit 1
 fi
 
+if [ "$EUID" -eq 0 ]; then
+    echo "Do not run this script with sudo. Run as truenas_admin directly."
+    exit 1
+fi
+
 DATASET="app/$APP"
 APPDIR="/mnt/app/$APP"
 
@@ -18,8 +23,8 @@ else
     echo "Created dataset $DATASET"
 fi
 
-# Own the directory to abc so code-server can write compose/env files
 sudo chown truenas_admin:truenas_admin "$APPDIR"
+sudo chmod 755 "$APPDIR"
 
 touch "$APPDIR/docker-compose.yml"
 touch "$APPDIR/.env"
