@@ -35,6 +35,7 @@ jobs:
             echo "Restarting $APP..."
             cd /mnt/app/$APP
             docker compose pull
-            docker compose down
+            docker stop $APP 2>/dev/null || true
+            docker rm $APP 2>/dev/null || true
             docker compose up -d
           done
