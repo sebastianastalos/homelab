@@ -8,8 +8,7 @@
     {
       "matchManagers": ["docker-compose"],
       "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true,
-      "automergeType": "pr",
+      "automerge": false,
       "labels": ["dependencies", "docker"]
     },
     {
