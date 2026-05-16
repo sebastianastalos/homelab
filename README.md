@@ -80,5 +80,8 @@ Front-panel LEDs restored via [install_ugreen_leds_controller](https://github.co
 | **Paperless-ngx** | Document management and OCR |
 | **GitHub Runner** | Self-hosted GitHub Actions runner |
 | **cAdvisor** | Docker container metrics exporter |
+| **Uptime Kuma** | Service uptime monitoring |
+| **AutoKuma** | Auto-creates Uptime Kuma monitors from Docker labels |
+| **ntfy** | Self-hosted push notifications |
 
 </details>
