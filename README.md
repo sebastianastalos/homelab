@@ -31,6 +31,10 @@ I use a combination of Grafana, Prometheus, Loki and Promtail to collect and vis
 - **Graphite Exporter** – bridges TrueNAS netdata metrics into Prometheus
 - **Scrutiny** – drive S.M.A.R.T. health monitoring
 - **Dozzle** – real-time Docker log viewer
+- **cAdvisor** – per-container CPU, memory, network and disk I/O metrics
+- **Uptime Kuma** – service uptime monitoring with ntfy push notifications
+- **ntfy** – self-hosted push notification server for alerts
+- **healthchecks.io** – external dead man's switch if the NAS goes offline entirely
 
 <details>
 <summary><strong>Hardware</strong></summary>
