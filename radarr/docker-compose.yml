@@ -10,4 +10,7 @@ services:
       - /mnt/storage/mediadata/data:/data
     ports:
       - 7878:7878
+    labels:
+      kuma.radarr.http.name: "Radarr"
+      kuma.radarr.http.url: "https://radarr.sebastianastalos.com"
     restart: unless-stopped

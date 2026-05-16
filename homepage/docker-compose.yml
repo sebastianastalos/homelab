@@ -11,4 +11,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     ports:
       - 3000:3000
+    labels:
+      kuma.homepage.http.name: "Homepage"
+      kuma.homepage.http.url: "https://home.sebastianastalos.com"
     restart: unless-stopped

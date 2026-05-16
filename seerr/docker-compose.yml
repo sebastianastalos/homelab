@@ -9,4 +9,7 @@ services:
       - /mnt/app/seerr/config:/app/config
     ports:
       - 5055:5055
+    labels:
+      kuma.seerr.http.name: "Seerr"
+      kuma.seerr.http.url: "https://seerr.sebastianastalos.com"
     restart: unless-stopped

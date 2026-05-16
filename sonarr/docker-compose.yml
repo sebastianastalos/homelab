@@ -10,4 +10,7 @@ services:
       - /mnt/storage/mediadata/data:/data
     ports:
       - 8989:8989
+    labels:
+      kuma.sonarr.http.name: "Sonarr"
+      kuma.sonarr.http.url: "https://sonarr.sebastianastalos.com"
     restart: unless-stopped

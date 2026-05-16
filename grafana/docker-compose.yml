@@ -9,4 +9,7 @@ services:
       - /mnt/app/grafana/data:/var/lib/grafana
     ports:
       - 3002:3000
+    labels:
+      kuma.grafana.http.name: "Grafana"
+      kuma.grafana.http.url: "https://grafana.sebastianastalos.com"
     restart: unless-stopped

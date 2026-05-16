@@ -13,4 +13,7 @@ services:
       - /dev/dri:/dev/dri
     group_add:
       - "107"
+    labels:
+      kuma.jellyfin.http.name: "Jellyfin"
+      kuma.jellyfin.http.url: "https://jellyfin.sebastianastalos.com"
     restart: unless-stopped
