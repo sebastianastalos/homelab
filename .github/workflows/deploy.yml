@@ -19,7 +19,7 @@ jobs:
       - name: Get changed compose files
         id: changed
         run: |
-          CHANGED=$(git diff --name-only HEAD~1 HEAD | grep 'docker-compose.yml' | sed 's|/docker-compose.yml||')
+          CHANGED=$(git diff --name-only HEAD~1 HEAD | grep 'docker-compose.yml' | sed 's|/docker-compose.yml||' | tr '\n' ' ' | xargs)
           echo "apps=$CHANGED" >> $GITHUB_OUTPUT
           echo "Changed apps: $CHANGED"
 
