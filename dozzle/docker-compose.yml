@@ -7,4 +7,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     ports:
       - "9999:8080"
+    labels:
+      kuma.dozzle.http.name: "Dozzle"
+      kuma.dozzle.http.url: "https://dozzle.sebastianastalos.com"
     restart: unless-stopped

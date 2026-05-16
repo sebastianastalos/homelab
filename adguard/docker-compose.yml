@@ -8,4 +8,7 @@ services:
     volumes:
       - /mnt/app/adguard/conf:/opt/adguardhome/conf
       - /mnt/app/adguard/work:/opt/adguardhome/work
+    labels:
+      kuma.adguard.http.name: "AdGuard Home"
+      kuma.adguard.http.url: "https://adguard.sebastianastalos.com"
     restart: unless-stopped

@@ -10,4 +10,7 @@ services:
       - /run/udev:/run/udev:ro
     ports:
       - "8086:8080"
+    labels:
+      kuma.scrutiny.http.name: "Scrutiny"
+      kuma.scrutiny.http.url: "https://scrutiny.sebastianastalos.com"
     restart: unless-stopped

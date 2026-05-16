@@ -9,4 +9,7 @@ services:
       - /mnt/storage/mediadata/data:/data
     ports:
       - 8085:8080
+    labels:
+      kuma.sabnzbd.http.name: "SABnzbd"
+      kuma.sabnzbd.http.url: "https://sabnzbd.sebastianastalos.com"
     restart: unless-stopped
