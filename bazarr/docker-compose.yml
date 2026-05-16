@@ -9,7 +9,4 @@ services:
       - /mnt/storage/mediadata/media:/media
     ports:
       - 6767:6767
-    labels:
-      kuma.bazarr.http.name: "Bazarr"
-      kuma.bazarr.http.url: "https://bazarr.sebastianastalos.com"
     restart: unless-stopped
