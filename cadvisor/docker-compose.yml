@@ -11,6 +11,10 @@ services:
       - /var/run:/var/run:ro
       - /sys:/sys:ro
       - /var/lib/docker:/var/lib/docker:ro
+    command:
+      - --housekeeping_interval=30s
+      - --docker_only=true
+      - --disable_metrics=advtcp,cpuLoad,cpu_topology,cpuset,hugetlb,memory_numa,percpu,process,referenced_memory,resctrl,sched,tcp,udp
     ports:
       - "8090:8080"
     restart: unless-stopped
