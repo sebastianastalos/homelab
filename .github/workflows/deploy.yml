@@ -35,7 +35,7 @@ jobs:
             echo "Restarting $APP..."
             cd /mnt/app/$APP
             docker compose pull
-            midclt call app.stop $APP 2>/dev/null || true
+            /host/usr/bin/midclt call app.stop $APP 2>/dev/null || true
             sleep 3
-            midclt call app.start $APP
+            /host/usr/bin/midclt call app.start $APP
           done

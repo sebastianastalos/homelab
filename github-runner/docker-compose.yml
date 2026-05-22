@@ -6,4 +6,5 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /mnt/app:/mnt/app
+      - /usr:/host/usr:ro
     restart: unless-stopped
