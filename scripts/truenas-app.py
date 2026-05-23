@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import asyncio
 import json
-import ssl
 import sys
 import os
 import websockets
@@ -12,12 +11,8 @@ ACTION = sys.argv[1]  # start or stop
 APP = sys.argv[2]
 
 async def run():
-    ctx = ssl.create_default_context()
-    ctx.check_hostname = False
-    ctx.verify_mode = ssl.CERT_NONE
-
-    uri = f"wss://{HOST}/api/current"
-    async with websockets.connect(uri, ssl=ctx) as ws:
+    uri = f"ws://{HOST}/api/current"
+    async with websockets.connect(uri) as ws:
         await ws.send(json.dumps({"id": 1, "jsonrpc": "2.0", "method": "auth.login_with_api_key", "params": [API_KEY]}))
         resp = json.loads(await ws.recv())
         if not resp.get("result"):
