@@ -1,10 +1,10 @@
 services:
   github-runner:
-    image: myoung34/github-runner:latest
+    build: .
     container_name: github-runner
     env_file: .env
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /mnt/app:/mnt/app
-      - /usr:/host/usr:ro
+      - /var/run/middleware.sock:/var/run/middleware.sock
     restart: unless-stopped
