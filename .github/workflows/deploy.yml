@@ -25,6 +25,8 @@ jobs:
 
       - name: Deploy changed apps
         if: steps.changed.outputs.apps != ''
+        env:
+          TRUENAS_API_KEY: ${{ secrets.TRUENAS_API_KEY }}
         run: |
           EXCLUDED="caddy tailscale gluetun immich paperless github-runner cadvisor"
           for APP in ${{ steps.changed.outputs.apps }}; do
@@ -35,7 +37,7 @@ jobs:
             echo "Restarting $APP..."
             cd /mnt/app/$APP
             docker compose pull
-            midclt call app.stop $APP 2>/dev/null || true
+            python3 /mnt/app/scripts/truenas-app.py stop $APP 2>/dev/null || true
             sleep 3
-            midclt call app.start $APP
+            python3 /mnt/app/scripts/truenas-app.py start $APP
           done
