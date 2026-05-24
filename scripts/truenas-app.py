@@ -18,11 +18,8 @@ async def run():
 
     uri = f"wss://{HOST}:444/api/current"
     async with websockets.connect(uri, ssl=ctx) as ws:
-        print(f"Key length: {len(API_KEY)}, starts with: {API_KEY[:8]}")
         await ws.send(json.dumps({"id": 1, "jsonrpc": "2.0", "method": "auth.login_with_api_key", "params": [API_KEY]}))
-        raw = await ws.recv()
-        print(f"Auth response: {raw}")
-        resp = json.loads(raw)
+        resp = json.loads(await ws.recv())
         if not resp.get("result"):
             print(f"Auth failed: {resp}")
             sys.exit(1)
