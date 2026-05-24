@@ -12,3 +12,4 @@ services:
       kuma.dozzle.http.url: "https://dozzle.sebastianastalos.com"
     restart: unless-stopped
 
+
