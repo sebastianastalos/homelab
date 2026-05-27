@@ -1,6 +1,6 @@
 services:
   profilarr:
-    image: santiagosayshey/profilarr:v1.1.4
+    image: ghcr.io/dictionarry-hub/profilarr:v2.0.6
     container_name: profilarr
     env_file:
       - .env
