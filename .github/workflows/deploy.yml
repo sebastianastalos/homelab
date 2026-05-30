@@ -39,7 +39,5 @@ jobs:
             echo "Restarting $APP..."
             cd /mnt/app/$APP
             docker compose pull
-            python3 /mnt/app/scripts/truenas-app.py stop $APP 2>/dev/null || true
-            sleep 3
-            python3 /mnt/app/scripts/truenas-app.py start $APP
+            python3 /mnt/app/scripts/truenas-app.py $APP
           done
