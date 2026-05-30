@@ -37,6 +37,7 @@ jobs:
               continue
             fi
             echo "Restarting $APP..."
+            cp $GITHUB_WORKSPACE/$APP/docker-compose.yml /mnt/app/$APP/docker-compose.yml
             cd /mnt/app/$APP
             docker compose pull
             python3 /mnt/app/scripts/truenas-app.py $APP
