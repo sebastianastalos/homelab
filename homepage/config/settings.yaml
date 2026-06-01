@@ -7,7 +7,7 @@ background:
 cardBlur: md
 hideVersion: true
 statusStyle: dot
-columns: 1
+columns: 3
 layout:
   Media:
     style: row
