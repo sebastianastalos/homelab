@@ -1,0 +1,26 @@
+services:
+  jellystat-db:
+    image: postgres:17
+    container_name: jellystat-db
+    env_file: .env
+    volumes:
+      - /mnt/app/jellystat/db:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready --dbname=postgres --username=${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  jellystat:
+    image: cyfershepard/jellystat:latest
+    container_name: jellystat
+    env_file: .env
+    volumes:
+      - /mnt/app/jellystat/backup:/app/backend/backup-data
+    ports:
+      - "3004:3000"
+    depends_on:
+      jellystat-db:
+        condition: service_healthy
+    restart: unless-stopped

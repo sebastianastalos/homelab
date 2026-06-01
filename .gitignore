@@ -50,6 +50,8 @@ isponsorblocktv/config/
 paperless/data/
 ntfy/data/
 uptime-kuma/data/
+jellystat/db/
+jellystat/backup/
 paperless/media/
 paperless/db/
 paperless/export/
