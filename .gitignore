@@ -40,6 +40,7 @@ ugreen-leds/
 prometheus/data/
 grafana/data/
 scrutiny/config/
+profilarr/config_v1_backup/
 scrutiny/influxdb/
 autobrr/config/
 loki/data/
