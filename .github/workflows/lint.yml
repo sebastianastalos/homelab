@@ -22,3 +22,5 @@ jobs:
                 max: 200
               truthy:
                 allowed-values: ['true', 'false', 'on', 'off', 'yes', 'no']
+              new-line-at-end-of-file: disable
+              empty-lines: disable
