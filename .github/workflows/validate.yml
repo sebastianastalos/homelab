@@ -1,0 +1,35 @@
+name: Validate
+
+on:
+  pull_request:
+    paths:
+      - '**/docker-compose.yml'
+      - '**/.env.example'
+  workflow_dispatch:
+
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Validate all compose files
+        run: |
+          FAILED=""
+          for COMPOSE in $(find . -name 'docker-compose.yml' | sort); do
+            APP=$(dirname "$COMPOSE")
+            if [ -f "$APP/.env.example" ]; then
+              grep -v '^#' "$APP/.env.example" | grep -v '^$' > "$APP/.env"
+            fi
+            if docker compose -f "$COMPOSE" config --quiet 2>&1; then
+              echo "$APP: OK"
+            else
+              echo "$APP: FAILED"
+              FAILED="$FAILED $APP"
+            fi
+          done
+          if [ -n "$FAILED" ]; then
+            echo "Failed:$FAILED"
+            exit 1
+          fi
