@@ -1,6 +1,6 @@
 services:
   prowlarr:
-    image: lscr.io/linuxserver/prowlarr:2.3.5
+    image: lscr.io/linuxserver/prowlarr:2.4.0
     container_name: prowlarr
     network_mode: "container:gluetun"
     env_file:
