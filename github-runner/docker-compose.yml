@@ -3,6 +3,8 @@ services:
     build: .
     container_name: github-runner
     env_file: .env
+    environment:
+      - EPHEMERAL=true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /mnt/app:/mnt/app
