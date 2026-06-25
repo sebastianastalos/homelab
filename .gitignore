@@ -88,5 +88,6 @@ Desktop.ini
 *~
 .idea/
 .vscode/
+.vscode-server/
 *.bak
 *.tmp

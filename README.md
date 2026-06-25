@@ -42,7 +42,7 @@ I use a combination of Grafana, Prometheus, Loki and Promtail to collect and vis
 
 | Name    | Device             | CPU            | RAM       | Storage                              |
 | ------- | ------------------ | -------------- | --------- | ------------------------------------ |
-| truenas | UGREEN DXP4800 Pro | Intel i3-1315U | 16GB DDR5 | 2x Seagate IronWolf 4TB (ZFS mirror) |
+| truenas | UGREEN DXP4800 Pro | Intel i3-1315U | 16GB DDR5 | Seagate IronWolf 4TB + 8TB (ZFS mirror, 4TB usable) |
 
 Front-panel LEDs restored via [install_ugreen_leds_controller](https://github.com/0x556c79/install_ugreen_leds_controller).
 
