@@ -34,10 +34,8 @@ async def run():
         resp = json.loads(await ws.recv())
         print(f"app.update({APP}): {resp.get('result', resp.get('error'))}")
 
-        await asyncio.sleep(5)
-
-        await ws.send(json.dumps({"id": 3, "jsonrpc": "2.0", "method": "app.redeploy", "params": [APP]}))
+        await ws.send(json.dumps({"id": 3, "jsonrpc": "2.0", "method": "app.pull_images", "params": [APP, {"redeploy": True}]}))
         resp = json.loads(await ws.recv())
-        print(f"app.redeploy({APP}): {resp.get('result', resp.get('error'))}")
+        print(f"app.pull_images({APP}): {resp.get('result', resp.get('error'))}")
 
 asyncio.run(run())
