@@ -30,7 +30,7 @@ jobs:
         env:
           TRUENAS_API_KEY: ${{ secrets.TRUENAS_API_KEY }}
         run: |
-          EXCLUDED="caddy tailscale gluetun immich paperless github-runner cadvisor jellystat"
+          EXCLUDED="caddy tailscale gluetun immich paperless github-runner cadvisor jellystat code-server"
           for APP in ${{ steps.changed.outputs.apps }}; do
             if echo "$EXCLUDED" | grep -qw "$APP"; then
               echo "Skipping $APP (excluded from auto-deploy)"
