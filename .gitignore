@@ -58,6 +58,7 @@ paperless/db/
 paperless/export/
 paperless/consume/
 caddy/config/caddy/
+posterizarr/
 
 # homepage 
 homepage/config/services.yaml
