@@ -9,7 +9,7 @@
 
 My homelab runs entirely on a **UGREEN DXP4800 Pro** - UGOS replaced with TrueNAS Scale for full control over storage and services.
 
-Everything is containerised and managed with Docker Compose. Renovate keeps services updated by opening PRs for new image versions. A self-hosted GitHub Actions runner on the NAS automatically deploys changes when PRs are merged. Gitleaks runs on every push to catch leaked secrets.
+Everything is containerised and managed with Docker Compose. Renovate keeps services updated by opening PRs for new image versions. A self-hosted GitHub Actions runner on the NAS automatically deploys changes when PRs are merged. Gitleaks scans every push for leaked secrets, and a YAML lint check catches config mistakes before they land.
 
 </div>
 
@@ -88,5 +88,6 @@ Front-panel LEDs restored via [install_ugreen_leds_controller](https://github.co
 | **Uptime Kuma** | Service uptime monitoring |
 | **AutoKuma** | Auto-creates Uptime Kuma monitors from Docker labels |
 | **ntfy** | Self-hosted push notifications |
+| **Jellystat** | Jellyfin playback statistics and watch history |
 
 </details>
