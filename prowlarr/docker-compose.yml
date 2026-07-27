@@ -2,11 +2,12 @@ services:
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:2.5.2
     container_name: prowlarr
-    network_mode: "container:gluetun"
     env_file:
       - .env
     volumes:
       - /mnt/app/prowlarr/config:/config
+    ports:
+      - "9696:9696"
     labels:
       kuma.prowlarr.http.name: "Prowlarr"
       kuma.prowlarr.http.url: "https://prowlarr.sebastianastalos.com"
