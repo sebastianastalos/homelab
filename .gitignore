@@ -79,6 +79,8 @@ Logs/
 # local-only
 CLAUDE.md
 HOMELAB.md
+.claude-home/
+copy.md
 
 # os / editor
 .DS_Store
