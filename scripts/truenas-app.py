@@ -10,6 +10,13 @@ API_KEY = os.environ["TRUENAS_API_KEY"]
 HOST = os.environ.get("TRUENAS_HOST", "192.168.1.131")
 APP = sys.argv[1]
 
+
+def check(label, resp):
+    if "error" in resp:
+        print(f"{label} failed: {resp['error']}")
+        sys.exit(1)
+    print(f"{label}: {resp.get('result')}")
+
 async def run():
     ctx = ssl.create_default_context()
     ctx.check_hostname = False
@@ -28,14 +35,12 @@ async def run():
             sys.exit(1)
 
         payload = {
-            "custom_compose_config": f"include:\n  - {compose_path}",
+            "custom_compose_config_string": f"include:\n  - {compose_path}",
         }
         await ws.send(json.dumps({"id": 2, "jsonrpc": "2.0", "method": "app.update", "params": [APP, payload]}))
-        resp = json.loads(await ws.recv())
-        print(f"app.update({APP}): {resp.get('result', resp.get('error'))}")
+        check(f"app.update({APP})", json.loads(await ws.recv()))
 
         await ws.send(json.dumps({"id": 3, "jsonrpc": "2.0", "method": "app.pull_images", "params": [APP, {"redeploy": True}]}))
-        resp = json.loads(await ws.recv())
-        print(f"app.pull_images({APP}): {resp.get('result', resp.get('error'))}")
+        check(f"app.pull_images({APP})", json.loads(await ws.recv()))
 
 asyncio.run(run())
