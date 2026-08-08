@@ -28,8 +28,22 @@ sudo chmod 755 "$APPDIR"
 
 touch "$APPDIR/docker-compose.yml"
 touch "$APPDIR/.env"
-echo "TZ=Europe/London" > "$APPDIR/.env.example"
+[ -f "$APPDIR/.env.example" ] || echo "TZ=Europe/London" > "$APPDIR/.env.example"
 
-echo "Created docker-compose.yml, .env, .env.example in $APPDIR"
-echo "Done. Fill in $APPDIR/docker-compose.yml and deploy via TrueNAS UI."
 echo "Note: run 'sudo chown -R 950:950 $APPDIR/<subdir>' for any config subdirectories after creating them."
+
+if [ ! -s "$APPDIR/docker-compose.yml" ]; then
+    echo "Next: fill in $APPDIR/docker-compose.yml, then re-run this script to deploy."
+    exit 0
+fi
+
+if sudo midclt call app.query "[[\"name\",\"=\",\"$APP\"]]" | grep -q '"name"'; then
+    echo "App $APP already exists in TrueNAS. Push a compose change to redeploy it."
+    exit 0
+fi
+
+PAYLOAD=$(python3 -c 'import json, sys; print(json.dumps({"app_name": sys.argv[1], "custom_app": True, "custom_compose_config_string": "include:\n  - %s/docker-compose.yml" % sys.argv[2]}))' "$APP" "$APPDIR")
+
+echo "Creating custom app $APP..."
+sudo midclt call app.create "$PAYLOAD"
+echo "Job submitted. Watch progress in the Apps UI, or: sudo midclt call app.query '[[\"name\",\"=\",\"$APP\"]]'"
