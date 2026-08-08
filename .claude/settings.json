@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sudo docker ps:*)",
+      "Bash(sudo docker logs:*)",
+      "Bash(sudo docker inspect:*)",
+      "Bash(sudo docker images:*)",
+      "Bash(sudo docker stats:*)",
+      "Bash(sudo docker compose config:*)",
+      "Bash(zfs list:*)",
+      "Bash(zfs get:*)",
+      "Bash(zpool status:*)",
+      "Bash(zpool list:*)",
+      "Bash(sudo midclt call app.query:*)",
+      "Bash(sudo midclt call app.config:*)",
+      "Bash(sudo midclt call system.info:*)",
+      "Bash(sudo midclt call pool.dataset.query:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git fetch:*)",
+      "Bash(findmnt:*)",
+      "Bash(df:*)",
+      "Bash(getent:*)",
+      "Bash(yamllint:*)"
+    ],
+    "deny": [
+      "Bash(sudo zfs destroy:*)",
+      "Bash(sudo zpool destroy:*)",
+      "Bash(sudo midclt call pool.dataset.delete:*)"
+    ]
+  }
+}
