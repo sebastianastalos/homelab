@@ -361,16 +361,22 @@ key, so its blast radius is this repo alone.
 
 ## Known rough edges and open questions
 
-- **`truenas-app.py` may not be doing what it looks like.** It passes
-  `custom_compose_config` a **string**, where the parameter name suggests a
-  dict, and [the script](scripts/truenas-app.py) prints an API error without
-  exiting – so a rejected `app.update` would be invisible and
-  `app.pull_images(redeploy: true)` would be doing all the real work. Unverified;
-  confirm against the live schema (`sudo midclt call core.get_methods`) before
-  relying on either call.
-- **New apps still require the TrueNAS UI.** `app.create` should make this
-  scriptable from [new-app.sh](scripts/new-app.sh); the parameter shape has not
-  been confirmed.
+- **Every `app.update` call was silently failing.**
+  [truenas-app.py](scripts/truenas-app.py) passed `custom_compose_config` a
+  string, where the API types that parameter as an **object** – the string form
+  is a separate parameter, `custom_compose_config_string`. The call was rejected
+  on every deploy, and the script printed the error without exiting, so
+  `app.pull_images(redeploy: true)` was doing all the real work. Deploys
+  succeeded by accident: the stored config is always the same `include:` line, so
+  a redeploy picks up the freshly-copied file regardless. Now fixed, and API
+  errors exit non-zero.
+- **Nothing waits for the jobs it starts.** `app.update`, `app.pull_images` and
+  `app.create` all return a job ID immediately. Neither the deploy workflow nor
+  [new-app.sh](scripts/new-app.sh) polls it, so a green workflow means the API
+  accepted the request – not that the redeploy finished. A pull that fails on a
+  bad image tag still reports success. Closing this means polling
+  `core.get_jobs` until the job leaves `RUNNING`, and it is the likeliest
+  explanation for the Apps UI showing "stopped" after an API-driven deploy.
 - **The NVMe holding `app` occasionally fails to enumerate after a restart,**
   taking every app with it. The pool and data are intact – the drive simply did
   not come back. A **cold shutdown and power-on** fixes it; a warm restart does

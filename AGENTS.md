@@ -89,10 +89,12 @@ from the TrueNAS Apps UI: `caddy`, `tailscale`, `gluetun`, `immich`,
 for one of those looks successful and does nothing. The exclusion list lives in
 [deploy.yml](.github/workflows/deploy.yml) – check it before promising a deploy.
 
-Creating a **new** app still requires the TrueNAS Apps UI: add a Custom App
-using `include: - /mnt/app/<app>/docker-compose.yml`.
-[scripts/new-app.sh](scripts/new-app.sh) prepares the dataset and files but does
-not deploy.
+Creating a **new** app no longer needs the Apps UI.
+[scripts/new-app.sh](scripts/new-app.sh) is a two-pass script: run it once to
+create the dataset and scaffold `docker-compose.yml`, `.env` and `.env.example`;
+fill in the compose file; run it again to register the app via
+`midclt call app.create`. It skips apps that already exist, so re-running is
+safe.
 
 ### Six things that will catch you out
 
