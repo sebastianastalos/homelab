@@ -1,6 +1,6 @@
 services:
   jellystat-db:
-    image: postgres:17
+    image: postgres:17.9
     container_name: jellystat-db
     env_file: .env
     volumes:
@@ -13,7 +13,7 @@ services:
     restart: unless-stopped
 
   jellystat:
-    image: cyfershepard/jellystat:latest
+    image: cyfershepard/jellystat:1.1.10
     container_name: jellystat
     env_file: .env
     volumes:

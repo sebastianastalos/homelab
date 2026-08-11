@@ -1,6 +1,6 @@
 services:
   tracearr:
-    image: ghcr.io/connorgallopo/tracearr:supervised
+    image: ghcr.io/connorgallopo/tracearr:supervised-1.4.27
     container_name: tracearr
     shm_size: 512mb
     mem_limit: 3g

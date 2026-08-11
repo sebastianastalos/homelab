@@ -1,6 +1,6 @@
 services:
   paperless:
-    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    image: ghcr.io/paperless-ngx/paperless-ngx:2.20.15
     container_name: paperless
     env_file: .env
     depends_on:
@@ -19,7 +19,7 @@ services:
     restart: unless-stopped
 
   paperless-db:
-    image: postgres:18
+    image: postgres:18.3
     container_name: paperless-db
     env_file: .env
     volumes:
@@ -27,6 +27,6 @@ services:
     restart: unless-stopped
 
   paperless-redis:
-    image: redis:8
+    image: redis:8.6.2
     container_name: paperless-redis
     restart: unless-stopped
