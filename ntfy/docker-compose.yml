@@ -1,6 +1,6 @@
 services:
   ntfy:
-    image: binwiederhier/ntfy:v2.22.0
+    image: binwiederhier/ntfy:v2.27.0
     container_name: ntfy
     env_file: .env
     command: serve
