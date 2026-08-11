@@ -15,13 +15,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
         with:
-          fetch-depth: 2
+          fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get changed compose files
         id: changed
         run: |
-          CHANGED=$(git diff --name-only HEAD~1 HEAD | grep 'docker-compose.yml' | sed 's|/docker-compose.yml||' | tr '\n' ' ' | xargs)
+          BEFORE="${{ github.event.before }}"
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ] \
+             || ! git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+            BASE="HEAD~1"
+          else
+            BASE="$BEFORE"
+          fi
+          echo "Diffing: $BASE..HEAD"
+          CHANGED=$(git diff --name-only "$BASE" HEAD | grep 'docker-compose.yml' | sed 's|/docker-compose.yml||' | tr '\n' ' ' | xargs)
           echo "apps=$CHANGED" >> $GITHUB_OUTPUT
           echo "Changed apps: $CHANGED"
 
