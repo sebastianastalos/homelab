@@ -13,7 +13,7 @@ services:
     restart: unless-stopped
 
   jellystat:
-    image: cyfershepard/jellystat:1.1.10
+    image: cyfershepard/jellystat:1.1.11
     container_name: jellystat
     env_file: .env
     volumes:
