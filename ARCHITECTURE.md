@@ -375,8 +375,34 @@ key, so its blast radius is this repo alone.
   [new-app.sh](scripts/new-app.sh) polls it, so a green workflow means the API
   accepted the request – not that the redeploy finished. A pull that fails on a
   bad image tag still reports success. Closing this means polling
-  `core.get_jobs` until the job leaves `RUNNING`, and it is the likeliest
-  explanation for the Apps UI showing "stopped" after an API-driven deploy.
+  `core.get_jobs` until the job leaves `RUNNING`.
+  [truenas-app.py](scripts/truenas-app.py) now does this; `new-app.sh` still
+  does not. This was also blamed for the Apps UI showing "stopped" after an
+  API-driven deploy – wrongly, see below.
+- **An app whose container sits in the wrong compose project is invisible to
+  TrueNAS, permanently.** TrueNAS manages each app in the project `ix-<app>`;
+  running `docker compose up -d` from inside `/mnt/app/<app>/` instead creates
+  the project `<app>`, because Compose takes the name from the directory. The
+  container runs fine and serves traffic, but TrueNAS sees an empty `ix-<app>`
+  and reports the app `STOPPED` – and Start can never recover it, because the
+  container name is already taken:
+
+  ```
+  Conflict. The container name "/dozzle" is already in use by container "87b9177e…"
+  ```
+
+  It is silent in the worst way: `app.pull_images(redeploy: true)` targets the
+  empty project, succeeds, and changes nothing, so **image bumps stop applying
+  without failing**. `dozzle` was orphaned this way on 2026-05-22 while the
+  deploy workflow was being built, and sat 15 Renovate versions behind
+  (`v10.6.0` against `v10.6.15`) until 2026-08-11. The deploy workflow was
+  never at fault – it only copies the file and calls the API. Diagnose by
+  comparing `docker ps -a --format '{{.Names}}\t{{.Label
+  "com.docker.compose.project"}}'` against `app.query`: a bare project name
+  where every other app carries `ix-` is the tell. Fix with `docker stop`,
+  `docker rm`, `midclt call app.start <app>`, then remove the orphaned
+  `<app>_default` network. `truenas-app.py` now guards against a recurrence by
+  failing when an app reports zero containers after a redeploy.
 - **The NVMe holding `app` occasionally fails to enumerate after a restart,**
   taking every app with it. The pool and data are intact – the drive simply did
   not come back. A **cold shutdown and power-on** fixes it; a warm restart does
