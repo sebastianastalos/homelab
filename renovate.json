@@ -27,6 +27,17 @@
       "description": "block bogus Ubuntu-version tags (e.g. 20.04.1 = qBit 4.3 from 2021). See runtipi/runtipi#1640"
     },
     {
+      "matchPackageNames": ["ghcr.io/connorgallopo/tracearr"],
+      "versioning": "regex:^supervised-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$",
+      "description": "tracearr publishes the supervised variant as supervised-<semver>; the regex also excludes its beta and nightly tags"
+    },
+    {
+      "matchPackageNames": ["postgres"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false,
+      "description": "a Postgres major bump needs pg_upgrade or dump/restore first — it will not start on an older data directory. See PR #64, which offered 17 -> 18 for jellystat"
+    },
+    {
       "matchManagers": ["github-actions"],
       "automerge": false,
       "labels": ["dependencies", "github-actions"]
