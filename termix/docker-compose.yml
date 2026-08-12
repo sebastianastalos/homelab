@@ -1,0 +1,13 @@
+services:
+  termix:
+    image: ghcr.io/lukegus/termix:2.6.1
+    container_name: termix
+    env_file: .env
+    volumes:
+      - /mnt/app/termix/data:/app/data
+    ports:
+      - "8080:8080"
+    labels:
+      kuma.termix.http.name: "Termix"
+      kuma.termix.http.url: "https://termix.sebastianastalos.com"
+    restart: unless-stopped
