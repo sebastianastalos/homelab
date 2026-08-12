@@ -89,14 +89,27 @@ from the TrueNAS Apps UI: `caddy`, `tailscale`, `gluetun`, `immich`,
 for one of those looks successful and does nothing. The exclusion list lives in
 [deploy.yml](.github/workflows/deploy.yml) – check it before promising a deploy.
 
-Creating a **new** app no longer needs the Apps UI.
-[scripts/new-app.sh](scripts/new-app.sh) is a two-pass script: run it once to
-create the dataset and scaffold `docker-compose.yml`, `.env` and `.env.example`;
-fill in the compose file; run it again to register the app via
-`midclt call app.create`. It skips apps that already exist, so re-running is
-safe.
+Creating a **new** app does not need the Apps UI.
+[scripts/new-app.sh](scripts/new-app.sh) is one command, run twice:
 
-### Six things that will catch you out
+```
+scripts/new-app.sh <app>     # pass 1: dataset, ownership, compose template
+$EDITOR <app>/docker-compose.yml
+scripts/new-app.sh <app>     # pass 2: validate, register, icon, verify
+```
+
+Pass 2 validates the compose file, warns on floating image tags, refuses to
+continue if a published host port is taken (checking live sockets *and* every
+other compose file, so stopped apps are caught), calls `app.create` and waits
+for the job, sets the Apps UI icon from dashboard-icons, adds the app's
+bind-mounted runtime dirs to `.gitignore`, and confirms a container is running.
+Every step is idempotent, so re-running after a failure is safe.
+
+Still manual afterwards: a `caddy/config/Caddyfile` block plus a Caddy reload,
+`chown -R 950:950` on any config subdirectory, and committing
+`<app>/docker-compose.yml` and `<app>/.env.example` (never `.env`).
+
+### Seven things that will catch you out
 
 1. **`/home` is `noexec` and lives on `boot-pool`.** Binaries there will not
    execute, and a TrueNAS upgrade replaces the whole boot environment. Anything
@@ -119,6 +132,13 @@ safe.
    the PR – even though the real `.env` on the host has it.
 6. **Renovate automerge is deliberately off.** Every dependency PR is reviewed
    and merged by hand. Do not enable automerge to "unblock" anything.
+7. **The Caddyfile is a single-file bind mount, so atomic saves are invisible
+   to Caddy.** Most editors write a temp file and rename, which leaves the
+   container reading the old inode: `caddy validate` passes, `caddy reload`
+   says `"config is unchanged"`, and nothing changes. Compare `stat -c %i` on
+   the host against `docker exec caddy stat -c %i /etc/caddy/Caddyfile`. A
+   container restart fixes it and drops HTTPS for every proxied service for a
+   few seconds; in-place edits (shell redirection) only need a reload.
 
 ---
 
