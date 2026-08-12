@@ -26,7 +26,7 @@ usage: new-app.sh <appname> [--icon <url> | --no-icon]
   --no-icon     leave the icon alone.
 
 Pass 1 creates the dataset, fixes ownership, and writes a commented
-docker-compose.yml template plus .env and .env.example. It then stops.
+docker-compose.yml template plus .env.tpl. It then stops.
 
 Pass 2 runs once the compose file has an uncommented "services:" key:
   - docker compose config  (syntax)
@@ -257,7 +257,25 @@ sudo chown truenas_admin:truenas_admin "$APPDIR"
 sudo chmod 755 "$APPDIR"
 
 [ -e "$APPDIR/.env" ] || : > "$APPDIR/.env"
-[ -s "$APPDIR/.env.example" ] || printf 'TZ=Europe/London\n' > "$APPDIR/.env.example"
+
+# .env.tpl is the committed source of truth: literals for ordinary config,
+# op:// references for anything secret. .env itself is generated and gitignored.
+# Older apps predate this and still carry a hand-maintained .env.example; leave
+# those alone rather than scaffolding a second, conflicting file.
+if [ ! -e "$APPDIR/.env.tpl" ] && [ ! -e "$APPDIR/.env.example" ]; then
+    sed "s/APPNAME/$APP/g" > "$APPDIR/.env.tpl" <<'EOF'
+TZ=Europe/London
+# Secrets go in 1Password and are referenced here - never a literal value.
+# Ordinary config (URLs, ports, flags) can be a literal.
+#
+# Create the item first, from a machine with the op CLI:
+#   op item create --category=password --title=APPNAME-deploy --vault=Homelab \
+#     'API_KEY[password]=<value>'
+# then reference it, and the deploy workflow renders it into .env:
+#   API_KEY=op://Homelab/APPNAME-deploy/API_KEY
+EOF
+    info "wrote template $APPDIR/.env.tpl"
+fi
 
 if [ ! -e "$COMPOSE" ] || [ ! -s "$COMPOSE" ]; then
     sed "s/APPNAME/$APP/g" > "$COMPOSE" <<'EOF'
@@ -292,7 +310,8 @@ if ! grep -qE '^services:' "$COMPOSE"; then
 
 Pass 1 done. Next:
   1. edit $COMPOSE (uncomment the template)
-  2. add any \${VAR} you reference to $APPDIR/.env and .env.example
+  2. put this app's config in $APPDIR/.env.tpl - literals for ordinary values,
+     op:// references for secrets (see the comments in that file)
   3. re-run: scripts/new-app.sh $APP
 EOF
     exit 0
@@ -300,7 +319,28 @@ fi
 
 # --- pass 2: validate, register, verify -------------------------------------
 
+# Compose reads .env, so it has to exist with real values before the app starts.
+# op is not installed on the NAS, so op:// references can only be resolved by
+# the deploy workflow - a template containing them is completed by a push, not
+# by this script. A template of plain literals is copied straight through.
+# Never overwrites a populated .env: delete it to force a re-render.
+render_env_from_tpl() {
+    [ -f "$APPDIR/.env.tpl" ] || return 0
+    if [ -s "$APPDIR/.env" ]; then
+        info ".env already populated - leaving it (delete it to re-render)"
+        return 0
+    fi
+    if grep -q 'op://' "$APPDIR/.env.tpl"; then
+        warn "$APP/.env.tpl has op:// references, which only the deploy workflow resolves"
+        warn "the app will start without them - commit and push to render .env, then it restarts with secrets"
+        return 0
+    fi
+    grep -vE '^[[:space:]]*#|^[[:space:]]*$' "$APPDIR/.env.tpl" > "$APPDIR/.env"
+    info "rendered $APPDIR/.env from .env.tpl (no op:// references to resolve)"
+}
+
 info "validating $COMPOSE"
+render_env_from_tpl
 sudo docker compose -f "$COMPOSE" config --quiet || die "compose file is invalid"
 
 FLOATING=$(compose_floating_tags || true)
@@ -377,5 +417,5 @@ Done. Remaining manual steps, if they apply:
   - config subdirs need the container's user:  sudo chown -R 950:950 $APPDIR/<subdir>
   - reverse proxy: add a block to caddy/config/Caddyfile, then reload Caddy by
     hand (caddy is excluded from the deploy workflow)
-  - commit $APP/docker-compose.yml and $APP/.env.example (never .env)
+  - commit $APP/docker-compose.yml and $APP/.env.tpl (never .env)
 EOF

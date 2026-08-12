@@ -5,6 +5,7 @@ on:
     paths:
       - '**/docker-compose.yml'
       - '**/.env.example'
+      - '**/.env.tpl'
   workflow_dispatch:
 
 jobs:
@@ -19,7 +20,15 @@ jobs:
           FAILED=""
           for COMPOSE in $(find . -name 'docker-compose.yml' | sort); do
             APP=$(dirname "$COMPOSE")
-            if [ -f "$APP/.env.example" ]; then
+            # Synthesise a throwaway .env so compose interpolation resolves.
+            # .env.tpl is the current convention; .env.example is what older
+            # apps still carry. op:// references cannot be resolved here - this
+            # job has no vault access, deliberately - so they become a dummy
+            # value. That still exercises every ${VAR} the compose file uses.
+            if [ -f "$APP/.env.tpl" ]; then
+              sed -E 's#=op://.*#=dummy-value-for-validation#' "$APP/.env.tpl" \
+                | grep -vE '^[[:space:]]*#|^[[:space:]]*$' > "$APP/.env"
+            elif [ -f "$APP/.env.example" ]; then
               grep -v '^#' "$APP/.env.example" | grep -v '^$' > "$APP/.env"
             fi
             if docker compose -f "$COMPOSE" config --quiet 2>&1; then
