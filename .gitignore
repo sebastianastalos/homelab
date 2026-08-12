@@ -59,6 +59,7 @@ paperless/export/
 paperless/consume/
 caddy/config/caddy/
 posterizarr/
+termix/data/
 
 # homepage 
 homepage/config/services.yaml

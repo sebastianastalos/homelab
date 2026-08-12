@@ -309,6 +309,38 @@ if [ -n "$FLOATING" ]; then
     echo "$FLOATING" | sed 's/^/    /' >&2
 fi
 
+# .gitignore lists runtime dirs explicitly, one line per app - there is no
+# wildcard. Miss one and an app's runtime state (credentials, databases) is
+# committable to a public repo, so derive them from the compose file instead of
+# relying on memory.
+ignore_runtime_dirs() {
+    local gitignore=/mnt/app/.gitignore rel added=0
+    for rel in $(compose_json | python3 -c '
+import json, sys
+app = sys.argv[1]
+prefix = "/mnt/app/" + app + "/"
+seen = set()
+for svc in (json.load(sys.stdin).get("services") or {}).values():
+    for v in (svc.get("volumes") or []):
+        src = v.get("source") or ""
+        if v.get("type") == "bind" and src.startswith(prefix) and src != prefix:
+            rel = app + "/" + src[len(prefix):].strip("/") + "/"
+            if rel not in seen:
+                seen.add(rel)
+                print(rel)
+' "$APP"); do
+        if grep -qxF "$rel" "$gitignore"; then
+            continue
+        fi
+        printf '%s\n' "$rel" >> "$gitignore"
+        info "added $rel to .gitignore"
+        added=1
+    done
+    [ "$added" -eq 0 ] || warn "commit the .gitignore change before committing $APP/"
+}
+
+ignore_runtime_dirs
+
 if app_registered; then
     # Port checks are skipped here on purpose: this app's own container is
     # holding its ports, so re-checking would always report a false clash.
