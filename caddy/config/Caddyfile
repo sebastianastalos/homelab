@@ -96,3 +96,7 @@ adguard.sebastianastalos.com {
         header_up Host {upstream_hostport}
     }
 }
+
+termix.sebastianastalos.com {
+    reverse_proxy 192.168.1.131:8080
+}
