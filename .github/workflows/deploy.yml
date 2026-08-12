@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - '**/docker-compose.yml'
+      - '**/.env.tpl'
   workflow_dispatch:
 
 jobs:
@@ -29,20 +30,38 @@ jobs:
             BASE="$BEFORE"
           fi
           echo "Diffing: $BASE..HEAD"
-          CHANGED=$(git diff --name-only "$BASE" HEAD | grep 'docker-compose.yml' | sed 's|/docker-compose.yml||' | tr '\n' ' ' | xargs)
+          CHANGED=$(git diff --name-only "$BASE" HEAD \
+            | grep -E '/(docker-compose\.yml|\.env\.tpl)$' \
+            | sed -E 's#/(docker-compose\.yml|\.env\.tpl)$##' \
+            | sort -u | tr '\n' ' ' | xargs)
           echo "apps=$CHANGED" >> $GITHUB_OUTPUT
           echo "Changed apps: $CHANGED"
+
+      - name: Install 1Password CLI
+        if: steps.changed.outputs.apps != ''
+        uses: 1password/install-cli-action@v4
 
       - name: Deploy changed apps
         if: steps.changed.outputs.apps != ''
         env:
           TRUENAS_API_KEY: ${{ secrets.TRUENAS_API_KEY }}
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
         run: |
           EXCLUDED="caddy tailscale gluetun immich paperless github-runner cadvisor jellystat"
           for APP in ${{ steps.changed.outputs.apps }}; do
             if echo "$EXCLUDED" | grep -qw "$APP"; then
               echo "Skipping $APP (excluded from auto-deploy)"
               continue
+            fi
+            # An app with a .env.tpl has 1Password as the source of truth for its
+            # secrets: render op:// references into .env before redeploying.
+            # Rendered to a temp file first so a failed lookup aborts the step
+            # (bash -e) without having truncated a working .env.
+            if [ -f "$GITHUB_WORKSPACE/$APP/.env.tpl" ]; then
+              echo "Rendering $APP/.env from .env.tpl"
+              op inject --force -i "$GITHUB_WORKSPACE/$APP/.env.tpl" -o "/tmp/$APP.env"
+              install -m 644 -o 950 -g 950 "/tmp/$APP.env" "/mnt/app/$APP/.env"
+              rm -f "/tmp/$APP.env"
             fi
             echo "Restarting $APP..."
             cp $GITHUB_WORKSPACE/$APP/docker-compose.yml /mnt/app/$APP/docker-compose.yml

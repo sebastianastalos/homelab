@@ -2,6 +2,10 @@
 **/.env
 **/.env.*
 !**/.env.example
+# .env.tpl holds op:// references only, never values - it is the input to
+# 'op inject' in the deploy workflow. Gitleaks is the backstop if a real value
+# ever lands in one.
+!**/.env.tpl
 *.key
 *.pem
 *.crt
