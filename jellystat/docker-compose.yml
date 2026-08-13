@@ -1,6 +1,6 @@
 services:
   jellystat-db:
-    image: postgres:17.9
+    image: postgres:17.11
     container_name: jellystat-db
     env_file: .env
     volumes:
