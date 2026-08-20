@@ -27,6 +27,6 @@ services:
     restart: unless-stopped
 
   paperless-redis:
-    image: redis:8.6.2
+    image: redis:8.10.1
     container_name: paperless-redis
     restart: unless-stopped
