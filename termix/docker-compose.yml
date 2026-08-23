@@ -1,6 +1,6 @@
 services:
   termix:
-    image: ghcr.io/lukegus/termix:2.6.1
+    image: ghcr.io/lukegus/termix:2.7.1
     container_name: termix
     env_file: .env
     volumes:
