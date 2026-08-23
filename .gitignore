@@ -98,3 +98,6 @@ Desktop.ini
 .vscode-server/
 *.bak
 *.tmp
+sparkyfitness/db/
+sparkyfitness/backup/
+sparkyfitness/uploads/

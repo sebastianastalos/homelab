@@ -1,0 +1,43 @@
+services:
+  sparkyfitness-db:
+    image: postgres:18.3-alpine
+    container_name: sparkyfitness-db
+    env_file: .env
+    environment:
+      # The postgres image wants POSTGRES_*; .env carries SPARKY_FITNESS_*.
+      POSTGRES_DB: ${SPARKY_FITNESS_DB_NAME:?required}
+      POSTGRES_USER: ${SPARKY_FITNESS_DB_USER:?required}
+      POSTGRES_PASSWORD: ${SPARKY_FITNESS_DB_PASSWORD:?required}
+    volumes:
+      - /mnt/app/sparkyfitness/db:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${SPARKY_FITNESS_DB_USER} -d ${SPARKY_FITNESS_DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  sparkyfitness-server:
+    image: codewithcj/sparkyfitness_server:v1.6.2
+    container_name: sparkyfitness-server
+    env_file: .env
+    volumes:
+      - /mnt/app/sparkyfitness/backup:/app/SparkyFitnessServer/backup
+      - /mnt/app/sparkyfitness/uploads:/app/SparkyFitnessServer/uploads
+    depends_on:
+      sparkyfitness-db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  sparkyfitness-frontend:
+    image: codewithcj/sparkyfitness:v1.6.2
+    container_name: sparkyfitness
+    env_file: .env
+    ports:
+      - "3005:80"
+    labels:
+      kuma.sparkyfitness.http.name: "SparkyFitness"
+      kuma.sparkyfitness.http.url: "https://fitness.sebastianastalos.com"
+    depends_on:
+      - sparkyfitness-server
+    restart: unless-stopped

@@ -104,3 +104,7 @@ termix.sebastianastalos.com {
 aiostreams.sebastianastalos.com {
     reverse_proxy 192.168.1.131:8081
 }
+
+fitness.sebastianastalos.com {
+    reverse_proxy 192.168.1.131:3005
+}
