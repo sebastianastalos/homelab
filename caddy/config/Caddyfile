@@ -89,6 +89,3 @@ adguard.sebastianastalos.com {
     }
 }
 
-fitness.sebastianastalos.com {
-    reverse_proxy 192.168.1.131:3005
-}
