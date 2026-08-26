@@ -18,7 +18,6 @@
 *credentials*
 
 # vpn
-gluetun/config/
 *.conf
 
 # tailscale state
@@ -29,14 +28,12 @@ jellyfin/config/
 sonarr/config/
 radarr/config/
 prowlarr/config/
-qbittorrent/config/
 sabnzbd/config/
 seerr/config/
 code-server/config/
 immich/library/
 immich/postgres/
 profilarr/config/
-aiostreams/config/
 bazarr/config/
 adguard/conf/
 adguard/work/
@@ -48,22 +45,13 @@ profilarr/config_v1_backup/
 scrutiny/influxdb/
 autobrr/config/
 loki/data/
-nginx/data/
-nginx/letsencrypt/
 caddy/data/
-isponsorblocktv/config/
-paperless/data/
 ntfy/data/
 uptime-kuma/data/
 jellystat/db/
 jellystat/backup/
-paperless/media/
-paperless/db/
-paperless/export/
-paperless/consume/
 caddy/config/caddy/
 posterizarr/
-termix/data/
 
 # homepage 
 homepage/config/services.yaml

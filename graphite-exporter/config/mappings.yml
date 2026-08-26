@@ -1,4 +1,0 @@
-mappings:
-  - match: "scale\\.truenas\\.(.*)"
-    match_type: regex
-    name: "truenas_${1}"
