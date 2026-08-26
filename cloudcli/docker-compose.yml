@@ -1,0 +1,22 @@
+services:
+  cloudcli:
+    build: .
+    image: ix-cloudcli-cloudcli:latest
+    container_name: cloudcli
+    env_file: .env
+    # DELIBERATELY SCOPED. This container runs Claude Code, so anything it can
+    # reach it can rewrite or execute. It gets a projects directory and its own
+    # fresh Claude config - NOT /mnt/app (the live config of every other app)
+    # and NOT an existing ~/.claude, so it holds no pre-existing credentials.
+    # No docker socket, for the same reason.
+    volumes:
+      - /mnt/storage/projects:/projects
+      # One writable home: it creates .claude, .cloudcli, .claude-code-ui and
+      # per-provider session dirs at startup, so partial mounts fail EACCES.
+      - /mnt/app/cloudcli/home:/home/node
+    ports:
+      - "3005:3001"
+    user: "950:950"
+    working_dir: /projects
+    command: ["cloudcli", "start"]
+    restart: unless-stopped

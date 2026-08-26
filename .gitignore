@@ -86,3 +86,4 @@ Desktop.ini
 .vscode-server/
 *.bak
 *.tmp
+cloudcli/home/
