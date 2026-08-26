@@ -80,7 +80,6 @@ Front-panel LEDs restored via [install_ugreen_leds_controller](https://github.co
 | **Uptime Kuma** | Service uptime monitoring |
 | **AutoKuma** | Auto-creates Uptime Kuma monitors from Docker labels |
 | **ntfy** | Self-hosted push notifications |
-| **SparkyFitness** | Food, fitness and health tracking |
 | **Jellystat** | Jellyfin playback statistics and watch history |
 
 </details>

@@ -434,5 +434,4 @@ duplicated here.
 | Networking | Tailscale, AdGuard Home, Caddy |
 | Monitoring | Prometheus, Grafana, Loki, Promtail, node-exporter, cAdvisor, Scrutiny, Dozzle, Uptime Kuma, autokuma, ntfy |
 | Photos | Immich |
-| Health | SparkyFitness |
 | Tooling | code-server, Homepage, github-runner |
