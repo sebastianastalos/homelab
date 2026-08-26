@@ -49,6 +49,12 @@ jobs:
         run: |
           EXCLUDED="caddy tailscale immich github-runner cadvisor jellystat"
           for APP in ${{ steps.changed.outputs.apps }}; do
+            # A removed app shows up as a changed path too. Nothing to deploy,
+            # so skip rather than failing the run on every app deletion.
+            if [ ! -f "$GITHUB_WORKSPACE/$APP/docker-compose.yml" ]; then
+              echo "Skipping $APP (compose file removed)"
+              continue
+            fi
             if echo "$EXCLUDED" | grep -qw "$APP"; then
               echo "Skipping $APP (excluded from auto-deploy)"
               continue
