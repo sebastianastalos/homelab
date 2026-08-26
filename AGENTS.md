@@ -5,8 +5,8 @@ overview lives in [README.md](README.md); this file is the agent entry point.
 
 **Read this file, then load only the docs your task needs** – the
 [doc map](#doc-map) at the bottom says which is which. In particular,
-[ARCHITECTURE.md](ARCHITECTURE.md) holds the design decisions and the TrueNAS,
-ZFS and Gluetun specifics that will otherwise cost you an afternoon; read the
+[ARCHITECTURE.md](ARCHITECTURE.md) holds the design decisions and the TrueNAS
+and ZFS specifics that will otherwise cost you an afternoon; read the
 section your task touches before touching it.
 
 Environment specifics – IP addresses, the real domain, port assignments,
@@ -18,7 +18,7 @@ and not in this repo. If you have it in context, prefer it for concrete values.
 ## What this project is – and what it is not
 
 The configuration for a **single-node home server**: a UGREEN DXP4800 Pro
-running TrueNAS Scale, hosting around forty Docker services deployed as TrueNAS
+running TrueNAS Scale, hosting around thirty Docker services deployed as TrueNAS
 Custom Apps. Media serving, photo backup, an automated media pipeline, a
 monitoring stack, and a reverse proxy reachable only over Tailscale.
 
@@ -84,8 +84,8 @@ The normal path is **git, not the UI**:
    WebSocket API via [truenas-app.py](scripts/truenas-app.py).
 
 **Several apps are excluded from that workflow** and must be redeployed by hand
-from the TrueNAS Apps UI: `caddy`, `tailscale`, `gluetun`, `immich`,
-`paperless`, `github-runner`, `cadvisor`, `jellystat`. Pushing a compose change
+from the TrueNAS Apps UI: `caddy`, `tailscale`, `immich`, `github-runner`,
+`cadvisor`, `jellystat`. Pushing a compose change
 for one of those looks successful and does nothing. The exclusion list lives in
 [deploy.yml](.github/workflows/deploy.yml) – check it before promising a deploy.
 
@@ -107,9 +107,9 @@ Every step is idempotent, so re-running after a failure is safe.
 
 Still manual afterwards: a `caddy/config/Caddyfile` block plus a Caddy reload,
 `chown -R 950:950` on any config subdirectory, and committing
-`<app>/docker-compose.yml` and `<app>/.env.example` (never `.env`).
+`<app>/docker-compose.yml` and `<app>/.env.tpl` (never `.env`).
 
-### Seven things that will catch you out
+### Six things that will catch you out
 
 1. **`/home` is `noexec` and lives on `boot-pool`.** Binaries there will not
    execute, and a TrueNAS upgrade replaces the whole boot environment. Anything
@@ -118,34 +118,35 @@ Still manual afterwards: a `caddy/config/Caddyfile` block plus a Caddy reload,
    "stopped" while the container runs fine.** Trust `sudo docker ps`, not the
    UI. To reconcile: `sudo docker stop`/`rm` the container, then
    `sudo midclt call app.start <app>`.
-3. **`qbittorrent` has no network namespace of its own.** It uses
-   `network_mode: "container:gluetun"`, so its port is published on the Gluetun
-   container and adding a `ports:` block to it will fail to start. Prowlarr used
-   to work this way and no longer does – it publishes `9696` directly.
-4. **code-server pins ZFS datasets in its mount namespace.** `zfs destroy`
+3. **code-server pins ZFS datasets in its mount namespace.** `zfs destroy`
    under `/mnt/app` can fail "busy" with nothing visible in `mount` or `lsof`.
    The authoritative check is `sudo grep -l "<path>" /proc/*/mounts`; the
    TrueNAS UI's "processes using dataset" warning gives false positives.
-5. **The Validate workflow synthesises `.env` from `.env.example`.** Any
-   `${VAR}` you reference in a compose file must also exist in that app's
-   `.env.example`, or [validate.yml](.github/workflows/validate.yml) fails on
-   the PR – even though the real `.env` on the host has it.
-6. **Renovate automerge is deliberately off.** Every dependency PR is reviewed
+4. **The Validate workflow synthesises `.env` from `.env.tpl`, falling back to
+   `.env.example`.** Any `${VAR}` you reference in a compose file must also
+   exist in whichever of those the app has, or
+   [validate.yml](.github/workflows/validate.yml) fails on the PR – even though
+   the real `.env` on the host has it.
+5. **Renovate automerge is deliberately off.** Every dependency PR is reviewed
    and merged by hand. Do not enable automerge to "unblock" anything.
-7. **The Caddyfile is a single-file bind mount, so atomic saves are invisible
+6. **The Caddyfile is a single-file bind mount, so atomic saves are invisible
    to Caddy.** Most editors write a temp file and rename, which leaves the
    container reading the old inode: `caddy validate` passes, `caddy reload`
    says `"config is unchanged"`, and nothing changes. Compare `stat -c %i` on
    the host against `docker exec caddy stat -c %i /etc/caddy/Caddyfile`. A
    container restart fixes it and drops HTTPS for every proxied service for a
-   few seconds; in-place edits (shell redirection) only need a reload.
+   few seconds; in-place edits (shell redirection) only need a reload. **`git
+   pull` and `git checkout` break it the same way** – they replace the file
+   rather than writing in place, so pulling a commit that touched the Caddyfile
+   silently detaches the container's view of it.
 
 ---
 
 ## Hard rules
 
 - **Never commit a `.env`.** They hold live VPN, API and database credentials
-  and are gitignored. `.env.example` is the redacted template and is committed.
+  and are gitignored. `.env.tpl` (current convention, may hold `op://`
+  references) or `.env.example` (legacy) is the committed template.
   Check keys are set by testing for presence, never by printing values.
 - **Environment variables go in `env_file: .env`,** not inline `environment:`
   blocks. The exception is `PUID`/`PGID` defaulting, which some files set
@@ -214,10 +215,10 @@ docker compose -f <app>/docker-compose.yml config --quiet
 | Document | Read it when |
 |---|---|
 | [CLAUDE.md](CLAUDE.md) | You are Claude Code – commits, tool use, and how to work here. Loads automatically. |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | You are touching a subsystem and need the service map, the design decisions and their reasoning, or the TrueNAS / ZFS / Gluetun specifics. Describes what exists, not a plan. |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | You are touching a subsystem and need the service map, the design decisions and their reasoning, or the TrueNAS / ZFS specifics. Describes what exists, not a plan. |
 | [README.md](README.md) | You want the short human overview of what runs here. |
 | HOMELAB.md | You need concrete values – IPs, ports, the real domain, credential locations, host caveats. Gitignored, not in this repo. |
-| `<app>/.env.example` | You need to know what configuration an app takes. |
+| `<app>/.env.tpl` or `.env.example` | You need to know what configuration an app takes. `.env.tpl` is the current convention; `.env.example` is what older apps still carry. |
 
 ## Keeping the docs in sync
 

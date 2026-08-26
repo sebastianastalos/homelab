@@ -73,7 +73,7 @@ half-worked is harder to unpick than a batch that never ran.
   useful result under thousands of lines.
 - Reference files as clickable markdown links –
   [sonarr/docker-compose.yml](sonarr/docker-compose.yml), or with a line number
-  [qbittorrent/docker-compose.yml:5](qbittorrent/docker-compose.yml#L5) – not in
+  [jellyfin/docker-compose.yml:5](jellyfin/docker-compose.yml#L5) – not in
   backticks.
 - Read-only inspection commands are pre-approved in
   [.claude/settings.json](.claude/settings.json); anything that changes state
@@ -147,7 +147,7 @@ Scope is optional and names the app or area affected – `jellyfin`, `sonarr`,
 Examples from this project:
 
 ```
-fix: move prowlarr off gluetun network, expose its own port 9696
+fix(aiostreams): point BASE_URL at a live endpoint
 refactor: migrate all app config datasets from storage to app pool
 ops: add secrets validation workflow using 1Password service account
 docs: add agent and architecture documentation

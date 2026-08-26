@@ -25,11 +25,10 @@ Secrets are stored in 1Password and loaded into GitHub Actions workflows via a S
 
 I use a combination of Grafana, Prometheus, Loki and Promtail to collect and visualise system metrics and logs. This gives full visibility into the infrastructure and helps detect issues proactively.
 
-- **Prometheus** – metrics collection, scraping node-exporter and graphite-exporter
+- **Prometheus** – metrics collection, scraping node-exporter and cAdvisor
 - **Grafana** – dashboarding and visualisation
 - **Loki + Promtail** – centralised log aggregation from all Docker containers
 - **Node Exporter** – host OS metrics (CPU, memory, disk, network)
-- **Graphite Exporter** – bridges TrueNAS netdata metrics into Prometheus
 - **Scrutiny** – drive S.M.A.R.T. health monitoring
 - **Dozzle** – real-time Docker log viewer
 - **cAdvisor** – per-container CPU, memory, network and disk I/O metrics
@@ -60,13 +59,10 @@ Front-panel LEDs restored via [install_ugreen_leds_controller](https://github.co
 | **Prowlarr** | Indexer manager |
 | **Profilarr** | Quality profile manager for Sonarr/Radarr |
 | **Bazarr** | Subtitle manager for Sonarr/Radarr |
-| **qBittorrent** | Torrent client |
 | **SABnzbd** | Usenet client |
 | **Seerr** | Media request portal |
-| **AIOStreams** | Stremio addon aggregator |
 | **Tracearr** | Media server monitoring |
 | **AdGuard Home** | Network-wide DNS filter |
-| **Gluetun** | WireGuard VPN gateway |
 | **Tailscale** | Remote access mesh VPN |
 | **Homepage** | Services dashboard |
 | **code-server** | Web-based VS Code editor |
@@ -78,16 +74,13 @@ Front-panel LEDs restored via [install_ugreen_leds_controller](https://github.co
 | **Dozzle** | Real-time Docker log viewer |
 | **Scrutiny** | Hard drive S.M.A.R.T. health monitoring |
 | **Autobrr** | Torrent automation |
-| **Graphite Exporter** | TrueNAS metrics bridge for Prometheus |
-| **Nginx Proxy Manager** | Local reverse proxy |
 | **Caddy** | HTTPS reverse proxy with Let's Encrypt via Porkbun DNS |
-| **iSponsorBlockTV** | SponsorBlock for Apple TV / YouTube TV |
-| **Paperless-ngx** | Document management and OCR |
 | **GitHub Runner** | Self-hosted GitHub Actions runner |
 | **cAdvisor** | Docker container metrics exporter |
 | **Uptime Kuma** | Service uptime monitoring |
 | **AutoKuma** | Auto-creates Uptime Kuma monitors from Docker labels |
 | **ntfy** | Self-hosted push notifications |
+| **SparkyFitness** | Food, fitness and health tracking |
 | **Jellystat** | Jellyfin playback statistics and watch history |
 
 </details>

@@ -14,7 +14,7 @@ anything reverse-proxied, and in each app's compose file.
 ## The shape of the system
 
 One machine. A UGREEN DXP4800 Pro with an Intel i3-1315U and 16GB of DDR5,
-running TrueNAS Scale with UGOS removed. Roughly forty Docker services, each
+running TrueNAS Scale with UGOS removed. Roughly thirty Docker services, each
 deployed as a **TrueNAS Custom App** wrapping a compose file from this repo.
 
 Three storage pools, each with a distinct job:
@@ -107,42 +107,33 @@ back without touching the others.
 
 ---
 
-## Egress: the VPN boundary
+## Egress: no VPN boundary any more
 
-> **Current state:** the `gluetun` and `qbittorrent` containers are stopped. The
-> compose files below still describe the wiring, so starting Gluetun before
-> qBittorrent restores it – order matters, since qBittorrent cannot start
-> without its network namespace host.
+> **Removed 2026-08-26.** `gluetun` and `qbittorrent` were deleted along with
+> six other unused apps. Torrenting is no longer part of this stack; SABnzbd
+> over Usenet is the only download path. The reasoning below is kept because it
+> explains a structural constraint worth knowing if a VPN-routed container is
+> ever reintroduced.
 
-`gluetun` holds a ProtonVPN WireGuard tunnel and is the only container with
-`NET_ADMIN` and `/dev/net/tun`. **qBittorrent** routes its entire network stack
-through it:
+`gluetun` held a ProtonVPN WireGuard tunnel and was the only container with
+`NET_ADMIN` and `/dev/net/tun`. qBittorrent routed its entire network stack
+through it with `network_mode: "container:gluetun"`.
 
-```yaml
-network_mode: "container:gluetun"
-```
-
-The consequence is structural, not cosmetic: qBittorrent has **no network
-namespace of its own**, so it cannot declare `ports:`. Its web UI is published on
-the Gluetun container instead, which is why Gluetun's compose file exposes ports
-that have nothing to do with Gluetun. If Gluetun stops, qBittorrent stops being
-reachable – the intended failure mode, since it also means it cannot leak
-traffic outside the tunnel.
+That consequence was structural, not cosmetic: a container sharing another's
+network namespace has **no namespace of its own**, so it cannot declare
+`ports:`. Its web UI had to be published on the Gluetun container instead,
+which is why Gluetun's compose file exposed ports that had nothing to do with
+Gluetun. If Gluetun stopped, qBittorrent stopped being reachable – the intended
+failure mode, since it also meant it could not leak traffic outside the tunnel.
 
 **Prowlarr used to be routed this way and no longer is.** Commit `ae5e6e9` moved
 it off the Gluetun network and gave it its own `9696`. The rationale was not
-recorded in the commit; the practical effect is that indexer traffic now leaves
-over the host's normal connection.
+recorded in the commit; the practical effect is that indexer traffic leaves over
+the host's normal connection.
 
-SABnzbd deliberately does **not** go through the VPN. Usenet is fetched over
-SSL from paying providers; there is no peer exposure to hide, and routing it
-through the tunnel would only cap throughput.
-
-Confirm the tunnel is actually carrying traffic:
-
-```bash
-sudo docker exec qbittorrent wget -qO- https://ipinfo.io/ip
-```
+SABnzbd deliberately never went through the VPN. Usenet is fetched over SSL
+from paying providers; there is no peer exposure to hide, and routing it through
+a tunnel would only cap throughput.
 
 Three usenet providers are configured in SABnzbd as a priority ladder across
 three distinct backbones, so that a gap in one provider's retention or article
@@ -153,11 +144,15 @@ HOMELAB.md and SABnzbd's own config, not here.
 
 ## Ingress: Caddy and TLS
 
-Caddy terminates HTTPS on 80 and 443 and holds a **wildcard certificate**
-obtained from Let's Encrypt through a **Porkbun DNS-01 challenge**. The DNS
-challenge is the point: a wildcard cert cannot be issued over HTTP-01 at all,
-and DNS-01 needs no inbound port open to the internet, which suits a system
-whose services are reachable only over the tailnet.
+Caddy terminates HTTPS on 80 and 443, issuing certificates from Let's Encrypt
+through a **Porkbun DNS-01 challenge**. DNS-01 is the point: it needs no inbound
+port open to the internet, which suits a system reachable only over the tailnet.
+
+**There is no wildcard certificate**, despite what earlier notes claimed.
+`acme_dns porkbun` is set globally but every hostname has its own site block and
+therefore its own certificate. The practical consequence is that a newly added
+hostname needs a fresh DNS-01 issuance and takes 15–60 seconds before it starts
+serving, rather than working the instant Caddy reloads.
 
 Freeing 80 and 443 for Caddy required moving the **TrueNAS web UI to 81 and
 444**. Anything that appears to point at an odd TrueNAS port is correct.
@@ -168,16 +163,17 @@ not to a container name. That looks wrong at first glance and is deliberate:
 Caddy runs in its own `ix-caddy` project namespace and cannot resolve containers
 belonging to other apps (see
 [Why Custom Apps](#why-custom-apps-with-the-include-method)). Going out to the
-host and back in is the simplest thing that works across all forty services.
+host and back in is the simplest thing that works across every service.
 
 Two services need `header_up Host {upstream_hostport}` because they validate the
 Host header against their own expected origin and reject Caddy's otherwise.
 
-**Nginx Proxy Manager is still deployed but superseded.** It came first, was
-replaced by Caddy for the wildcard-cert workflow, and now serves only as a
-secondary HTTP proxy. **Tailscale Serve was also used for this and has been
-reset** – it is no longer part of the ingress path, though its state volume
-persists so the command still works if needed.
+**Two earlier ingress attempts have both been removed.** Nginx Proxy Manager
+came first and was superseded by Caddy; it lingered as a dead secondary proxy
+(unable even to bind 80, which Caddy owns) and was deleted on 2026-08-26.
+**Tailscale Serve** was also used for this and has been reset – no longer part
+of the ingress path, though its state volume persists so the command still
+works if needed.
 
 ---
 
@@ -222,7 +218,7 @@ produces failed transcodes rather than a graceful fallback.
 
 ## The media pipeline
 
-Request and automation front ends (Seerr, Autobrr, AIOStreams) feed the
+Request and automation front ends (Seerr, Autobrr) feed the
 Servarr apps, which hand work to the download clients and import the results
 into the library by hardlink.
 
@@ -234,19 +230,19 @@ hardlinks land in the same dataset:
 | Jellyfin | media at `/data/media/{movies,tvshows,anime}` |
 | Sonarr root folders | `/media/tvshows`, `/media/anime` |
 | Radarr root folder | `/media/movies` |
-| qBittorrent | complete `/data/torrents/complete/<category>`, incomplete `/data/torrents/incomplete` |
 | SABnzbd | complete `/data/usenet/complete/<category>`, incomplete `/data/usenet/incomplete` |
 
-Download categories are `tv-sonarr`, `radarr` and `anime-sonarr` in qBittorrent;
-`tv`, `movies` and `anime` in SABnzbd. Profilarr manages quality and custom
+Download categories are `tv`, `movies` and `anime` in SABnzbd. The
+`data/torrents` tree remains on disk but nothing writes to it since qBittorrent
+was removed. Profilarr manages quality and custom
 format definitions across Sonarr and Radarr so they do not drift apart.
 
 ---
 
 ## Monitoring and observability
 
-Prometheus scrapes itself, node-exporter for host OS metrics, cAdvisor for
-per-container resource use, and graphite-exporter. Grafana reads from Prometheus
+Prometheus scrapes itself, node-exporter for host OS metrics and cAdvisor for
+per-container resource use. Grafana reads from Prometheus
 and from Loki. Promtail discovers containers through the Docker socket
 (`docker_sd_configs`) and labels logs by container name, so new services appear
 in Grafana without configuration.
@@ -270,12 +266,14 @@ Scrutiny reads drive S.M.A.R.T. data and runs privileged because it needs raw
 block-device access. Dozzle gives a live log view without going through Grafana.
 Jellystat holds Jellyfin playback statistics and bundles **its own Postgres**.
 
-### The graphite-exporter dead end
+### The graphite-exporter dead end (removed)
 
-Worth recording so it is not re-attempted. TrueNAS Scale can export metrics in
+Worth recording so it is not re-attempted. **graphite-exporter was deleted on
+2026-08-26**, along with Prometheus' scrape job for it; TrueNAS' own Reporting →
+Graphite target should be turned off too. TrueNAS Scale can export metrics in
 Graphite format, so graphite-exporter was deployed to bridge them into
 Prometheus, with a mapping config stripping the `scale.truenas.` prefix. It
-works, and community dashboard **19661 still does not**, because TrueNAS emits
+worked, and community dashboard **19661 still did not**, because TrueNAS emits
 netdata-shaped metric names that do not match that dashboard's queries. Dashboard
 1860 (Node Exporter Full) works out of the box from node-exporter alone, and the
 TrueNAS-specific panels that were wanted now live in a hand-built dashboard at
@@ -329,14 +327,13 @@ a live media server is not a change worth applying unattended.
 
 ### Exclusions, and why each is excluded
 
-`caddy`, `tailscale`, `gluetun`, `immich`, `paperless`, `github-runner`,
-`cadvisor` and `jellystat` are skipped by the deploy workflow. The reasons fall
-into three groups: services whose restart would sever the connection the deploy
-is travelling over (`tailscale`, `github-runner`), services other containers
-depend on for their network namespace or ingress (`gluetun`, `caddy`), and
-multi-container apps bundling their own database, where an unattended
-`pull_images(redeploy: true)` risks restarting an app server against a database
-mid-migration (`immich`, `paperless`, `jellystat`).
+`caddy`, `tailscale`, `immich`, `github-runner`, `cadvisor` and `jellystat` are
+skipped by the deploy workflow. The reasons fall into three groups: services
+whose restart would sever the connection the deploy is travelling over
+(`tailscale`, `github-runner`), services other containers depend on for ingress
+(`caddy`), and multi-container apps bundling their own database, where an
+unattended `pull_images(redeploy: true)` risks restarting an app server against
+a database mid-migration (`immich`, `jellystat`).
 
 ---
 
@@ -431,10 +428,11 @@ duplicated here.
 
 | Role | Services |
 |---|---|
-| Media serving | Jellyfin, Jellystat, Tracearr, iSponsorBlockTV |
-| Media automation | Sonarr, Radarr, Prowlarr, Bazarr, Profilarr, Autobrr, Seerr, AIOStreams |
-| Download clients | qBittorrent (via Gluetun), SABnzbd |
-| Networking | Gluetun, Tailscale, AdGuard Home, Caddy, Nginx Proxy Manager |
-| Monitoring | Prometheus, Grafana, Loki, Promtail, node-exporter, cAdvisor, graphite-exporter, Scrutiny, Dozzle, Uptime Kuma, autokuma, ntfy |
-| Documents and photos | Immich, Paperless-ngx |
+| Media serving | Jellyfin, Jellystat, Tracearr |
+| Media automation | Sonarr, Radarr, Prowlarr, Bazarr, Profilarr, Autobrr, Seerr |
+| Download clients | SABnzbd |
+| Networking | Tailscale, AdGuard Home, Caddy |
+| Monitoring | Prometheus, Grafana, Loki, Promtail, node-exporter, cAdvisor, Scrutiny, Dozzle, Uptime Kuma, autokuma, ntfy |
+| Photos | Immich |
+| Health | SparkyFitness |
 | Tooling | code-server, Homepage, github-runner |
