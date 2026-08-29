@@ -1,0 +1,22 @@
+services:
+  technitium:
+    image: technitium/dns-server:15.4.0
+    container_name: technitium
+    hostname: technitium
+    env_file: .env
+    # Bridge networking on purpose. AdGuard holds *:53 via host networking and
+    # is the tailnet-wide resolver, so this is published on 5354 to avoid
+    # fighting it. Query it deliberately: dig @192.168.1.131 -p 5354 <name>
+    ports:
+      - "5380:5380/tcp"   # web console
+      - "5354:53/udp"     # DNS  (53 is AdGuard's; 5353 is avahi/mDNS)
+      - "5354:53/tcp"
+    volumes:
+      - /mnt/app/technitium/config:/etc/dns
+      - /mnt/app/technitium/logs:/var/log/technitium/dns
+    sysctls:
+      - net.ipv4.ip_local_port_range=1024 65535
+    labels:
+      kuma.technitium.http.name: "Technitium DNS"
+      kuma.technitium.http.url: "http://192.168.1.131:5380"
+    restart: unless-stopped
