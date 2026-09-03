@@ -6,7 +6,7 @@
 # npm package versions are pinned so the image is reproducible, but note
 # Renovate does not track npm installs inside a Dockerfile - bump these by hand
 # and rebuild (same maintenance shape as github-runner).
-FROM node:22.23.2-slim
+FROM node:24.20.0-slim
 
 ARG CLOUDCLI_VERSION=1.37.2
 ARG CLAUDE_CODE_VERSION=2.1.246
