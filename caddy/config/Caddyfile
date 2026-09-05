@@ -93,3 +93,7 @@ adguard.sebastianastalos.com {
 trilium.sebastianastalos.com {
     reverse_proxy 192.168.1.131:8081
 }
+
+maintainerr.sebastianastalos.com {
+    reverse_proxy 192.168.1.131:6246
+}

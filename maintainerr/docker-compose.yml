@@ -1,0 +1,16 @@
+---
+services:
+  maintainerr:
+    image: ghcr.io/maintainerr/maintainerr:3.26.0
+    container_name: maintainerr
+    # Maintainerr does not take PUID/PGID; it runs as whatever user is set here
+    # and /opt/data must be writable by it.
+    user: "950:950"
+    env_file:
+      - .env
+    volumes:
+      - /mnt/app/maintainerr/data:/opt/data
+    ports:
+      - 6246:6246
+    mem_limit: 1g
+    restart: unless-stopped
