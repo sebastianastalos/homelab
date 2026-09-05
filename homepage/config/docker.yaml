@@ -2,9 +2,7 @@
 # For configuration options and examples, please see:
 # https://gethomepage.dev/configs/docker/
 
-# my-docker:
-#   host: 127.0.0.1
-#   port: 2375
-
+# Disabled: container stats need a read-write docker.sock mount, which is
+# root-equivalent on the host. The socket is currently mounted :ro.
 # my-docker:
 #   socket: /var/run/docker.sock

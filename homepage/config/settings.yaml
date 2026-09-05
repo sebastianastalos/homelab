@@ -7,23 +7,23 @@ background:
 cardBlur: md
 hideVersion: true
 statusStyle: dot
-columns: 3
+maxGroupColumns: 4
+quicklaunch:
+  searchDescriptions: true
+  hideVisitURL: false
+  provider: google
 layout:
   Media:
-    style: row
-    columns: 4
+    style: column
   Arr Stack:
-    style: row
-    columns: 3
-  Documents:
-    style: row
-    columns: 1
-  Downloads:
-    style: row
-    columns: 2
+    style: column
   Monitoring:
-    style: row
-    columns: 3
+    style: column
   System:
-    style: row
-    columns: 5
+    style: column
+  Tools:
+    style: column
+  Apps:
+    style: column
+  External:
+    style: column

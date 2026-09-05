@@ -1,21 +1,22 @@
-#information-widgets {
-  display: none !important;
+/* Global density. Homepage sizes in rem, so dropping the root size scales
+   cards, text and icons together. 14px = 87.5% of the 16px default. */
+html {
+  font-size: 14px;
 }
 
-/* Padding around each group so they're not touching neighbors */
+/* Group spacing - tighter than the default so columns pack closer */
 .services-group {
-  padding: 0.75rem 1rem !important;
-  margin-bottom: 0.75rem !important;
+  padding: 0.4rem 0.6rem !important;
+  margin-bottom: 0.5rem !important;
 }
 
-/* Breathing room under the group title */
 .service-group-name {
-  margin-bottom: 0.75rem !important;
+  margin-bottom: 0.5rem !important;
 }
 
-/* Slight gap between service cards within a group */
+/* Gap between service cards within a group */
 .services-group .flex-col {
-  gap: 0.5rem !important;
+  gap: 0.35rem !important;
 }
 
 /* Service card hover effect */
