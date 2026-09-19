@@ -55,7 +55,7 @@ jobs:
               echo "Skipping $APP (compose file removed)"
               continue
             fi
-            if echo "$EXCLUDED" | grep -qw "$APP"; then
+            if echo " $EXCLUDED " | grep -qF " $APP "; then
               echo "Skipping $APP (excluded from auto-deploy)"
               continue
             fi
