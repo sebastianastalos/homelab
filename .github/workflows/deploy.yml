@@ -47,7 +47,7 @@ jobs:
           TRUENAS_API_KEY: ${{ secrets.TRUENAS_API_KEY }}
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
         run: |
-          EXCLUDED="caddy tailscale immich github-runner cadvisor jellystat"
+          EXCLUDED="caddy tailscale immich github-runner cadvisor jellystat actual-flow"
           for APP in ${{ steps.changed.outputs.apps }}; do
             # A removed app shows up as a changed path too. Nothing to deploy,
             # so skip rather than failing the run on every app deletion.
