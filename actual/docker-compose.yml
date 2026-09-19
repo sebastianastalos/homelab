@@ -1,0 +1,16 @@
+---
+services:
+  actual:
+    image: ghcr.io/actualbudget/actual:26.9.0
+    container_name: actual
+    # No PUID/PGID support and the image runs as root by default; this keeps
+    # /data owned by truenas_admin.
+    user: "950:950"
+    env_file:
+      - .env
+    volumes:
+      - /mnt/app/actual/data:/data
+    ports:
+      - 5006:5006
+    mem_limit: 1g
+    restart: unless-stopped
