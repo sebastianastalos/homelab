@@ -85,7 +85,7 @@ The normal path is **git, not the UI**:
 
 **Several apps are excluded from that workflow** and must be redeployed by hand
 from the TrueNAS Apps UI: `caddy`, `tailscale`, `immich`, `github-runner`,
-`cadvisor`, `jellystat`. Pushing a compose change
+`cadvisor`, `jellystat`, `actual-flow`. Pushing a compose change
 for one of those looks successful and does nothing. The exclusion list lives in
 [deploy.yml](.github/workflows/deploy.yml) – check it before promising a deploy.
 

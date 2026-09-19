@@ -239,6 +239,34 @@ format definitions across Sonarr and Radarr so they do not drift apart.
 
 ---
 
+## Why bank sync goes through a paid aggregator
+
+Reading bank account data in the UK is a regulated activity, so the providers
+come in two shapes: business-facing, where you need a company and a contract, and
+consumer-facing, where the vendor holds the licence and you are simply a
+customer. Every free do-it-yourself route lands in the first group.
+
+The options were checked in turn and closed off. **GoCardless** stopped accepting
+new Bank Account Data accounts in July 2025, which removes the route Actual's own
+documentation still leads with. **TrueLayer** grants live credentials only after
+business verification and a sales conversation; a sandbox client ID reaches mock
+banks and nothing else. **Enable Banking** is the one provider that explicitly
+permits individual non-commercial use through its restricted mode, but its
+documented markets are 30 EEA countries and the UK is not among them.
+
+That leaves a consumer aggregator. **Lunch Flow** holds the GoCardless
+relationship and re-exposes accounts over its own REST API, which is why it works
+without a company behind it — and why it costs about $35 a year. The trade is
+worth stating plainly: a third party holds read access to the bank connection,
+and the UK route depends on their GoCardless account continuing to exist. The
+sync tool itself runs here and pulls from them, so nothing needs inbound access
+to the NAS, and the Actual server password never leaves the host.
+
+The alternative, if that trade ever stops being acceptable, is CSV export from
+the bank and a manual import — free, unglamorous, and immune to all of the above.
+
+---
+
 ## Monitoring and observability
 
 Prometheus scrapes itself, node-exporter for host OS metrics and cAdvisor for
@@ -327,13 +355,21 @@ a live media server is not a change worth applying unattended.
 
 ### Exclusions, and why each is excluded
 
-`caddy`, `tailscale`, `immich`, `github-runner`, `cadvisor` and `jellystat` are
-skipped by the deploy workflow. The reasons fall into three groups: services
-whose restart would sever the connection the deploy is travelling over
-(`tailscale`, `github-runner`), services other containers depend on for ingress
-(`caddy`), and multi-container apps bundling their own database, where an
-unattended `pull_images(redeploy: true)` risks restarting an app server against
-a database mid-migration (`immich`, `jellystat`).
+`caddy`, `tailscale`, `immich`, `github-runner`, `cadvisor`, `jellystat` and
+`actual-flow` are skipped by the deploy workflow. The reasons fall into four
+groups: services whose restart would sever the connection the deploy is
+travelling over (`tailscale`, `github-runner`), services other containers depend
+on for ingress (`caddy`), multi-container apps bundling their own database, where
+an unattended `pull_images(redeploy: true)` risks restarting an app server
+against a database mid-migration (`immich`, `jellystat`), and apps whose image is
+built on the host and exists in no registry, so `pull_images` has nothing to pull
+(`actual-flow`).
+
+The list is matched on exact, space-delimited names. It previously used
+`grep -w`, which treats a hyphen as a non-word character: adding `actual-flow`
+silently excluded `actual` too, and that app's deploys began passing while doing
+nothing. Any app whose name is a prefix of a longer excluded one would have hit
+the same trap.
 
 ---
 
@@ -434,4 +470,5 @@ duplicated here.
 | Networking | Tailscale, AdGuard Home, Caddy |
 | Monitoring | Prometheus, Grafana, Loki, Promtail, node-exporter, cAdvisor, Scrutiny, Dozzle, Uptime Kuma, autokuma, ntfy |
 | Photos | Immich |
+| Finance | Actual Budget, actual-flow |
 | Tooling | code-server, Homepage, github-runner |

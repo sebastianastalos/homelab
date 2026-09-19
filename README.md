@@ -81,5 +81,7 @@ Front-panel LEDs restored via [install_ugreen_leds_controller](https://github.co
 | **AutoKuma** | Auto-creates Uptime Kuma monitors from Docker labels |
 | **ntfy** | Self-hosted push notifications |
 | **Jellystat** | Jellyfin playback statistics and watch history |
+| **Actual Budget** | Self-hosted budgeting |
+| **actual-flow** | Daily import of bank transactions from Lunch Flow into Actual |
 
 </details>
