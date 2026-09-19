@@ -1,0 +1,14 @@
+---
+services:
+  actual-flow:
+    image: actual-flow:0.0.22
+    container_name: actual-flow
+    # Built on the host from build/ - upstream publishes no image, so this tag
+    # is local only and the app is excluded from the deploy workflow.
+    user: "950:950"
+    env_file:
+      - .env
+    volumes:
+      - /mnt/app/actual-flow/data:/app/config
+    mem_limit: 512m
+    restart: unless-stopped
