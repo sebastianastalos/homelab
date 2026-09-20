@@ -1,0 +1,14 @@
+---
+services:
+  trading212:
+    image: trading212-sync:1.0.0
+    container_name: trading212
+    # Built on the host from build/, so this tag is local only and the app is
+    # excluded from the deploy workflow.
+    user: "950:950"
+    env_file:
+      - .env
+    volumes:
+      - /mnt/app/trading212/data:/app/data
+    mem_limit: 512m
+    restart: unless-stopped
