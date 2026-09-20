@@ -4,7 +4,12 @@
 # installs the package unpinned, which would drift on every rebuild.
 FROM node:22.23.2-alpine
 
-RUN apk add --no-cache bash tini \
+# tzdata: without it TZ is silently ignored and the container runs UTC.
+# The uid 950 user exists so busybox crond can run the job as itself -
+# as non-root it cannot setuid to a crontab named after another user.
+RUN apk add --no-cache bash tini tzdata \
+    && addgroup -g 950 actual \
+    && adduser -D -u 950 -G actual actual \
     && npm install -g @lunchflow/actual-flow@0.0.22
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
