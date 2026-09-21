@@ -12,6 +12,10 @@ RUN apk add --no-cache bash tini tzdata \
     && adduser -D -u 950 -G actual actual \
     && npm install -g @lunchflow/actual-flow@0.0.22
 
+# cover.js requires @actual-app/api, which is nested inside the globally
+# installed package, so node needs pointing at it.
+ENV NODE_PATH=/usr/local/lib/node_modules/@lunchflow/actual-flow/node_modules
+COPY cover.js /usr/local/lib/cover.js
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod 755 /usr/local/bin/entrypoint.sh
 

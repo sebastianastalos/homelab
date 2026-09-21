@@ -1,6 +1,6 @@
 TZ=Europe/London
 ACTUAL_FLOW_MODE=scheduled
-ACTUAL_FLOW_AT=06:00
+ACTUAL_FLOW_AT=06:00,15:00
 ACTUAL_FLOW_RUN_ON_STARTUP=false
 # Actual is reached over the LAN without TLS, but never disable verification.
 NODE_TLS_REJECT_UNAUTHORIZED=1
