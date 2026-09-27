@@ -93,6 +93,10 @@ trilium/data/
 maintainerr/data/
 actual/data/
 actual-flow/data/
+
+# documents - never commit statements or scans to a public repo
+*.pdf
 trading212/data/
 gluetun/config/
 gluetun/tailscale/
+private/
