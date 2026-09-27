@@ -114,6 +114,10 @@ back without touching the others.
 > over Usenet is the only download path. The reasoning below is kept because it
 > explains a structural constraint worth knowing if a VPN-routed container is
 > ever reintroduced.
+>
+> **Reintroduced 2026-09-27 for a different job:** `gluetun` now carries a
+> ProtonVPN tunnel for a Tailscale exit node (a userspace Tailscale sidecar in
+> its namespace). No container on the NAS routes through it.
 
 `gluetun` held a ProtonVPN WireGuard tunnel and was the only container with
 `NET_ADMIN` and `/dev/net/tun`. qBittorrent routed its entire network stack
