@@ -13,7 +13,7 @@ services:
     restart: unless-stopped
 
   tailscale-proton:
-    image: tailscale/tailscale:v1.102.4
+    image: tailscale/tailscale:v1.102.5
     container_name: tailscale-proton
     network_mode: service:gluetun
     depends_on:
