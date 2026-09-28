@@ -158,7 +158,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "dispatcharr_active_streams",
+          "expr": "dispatcharr_active_streams{type=\"live\"}",
           "legendFormat": "",
           "refId": "A",
           "range": true
