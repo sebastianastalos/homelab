@@ -6,6 +6,8 @@ services:
       - NET_ADMIN
     devices:
       - /dev/net/tun:/dev/net/tun
+    ports:
+      - 9191:9191
     volumes:
       - /mnt/app/gluetun/config:/gluetun
     env_file:
@@ -26,4 +28,47 @@ services:
       - TS_USERSPACE=true
     volumes:
       - /mnt/app/gluetun/tailscale:/var/lib/tailscale
+    healthcheck:
+      test: ["CMD", "nc", "-z", "127.0.0.1", "9999"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    labels:
+      deunhealth.restart.on.unhealthy: "true"
+    restart: unless-stopped
+
+  dispatcharr:
+    image: ghcr.io/dispatcharr/dispatcharr:0.31.0
+    container_name: dispatcharr
+    network_mode: service:gluetun
+    depends_on:
+      gluetun:
+        condition: service_healthy
+    # Inline rather than env_file: .env holds the VPN and Tailscale secrets
+    environment:
+      - DISPATCHARR_ENV=aio
+      - REDIS_HOST=localhost
+      - CELERY_BROKER_URL=redis://localhost:6379/0
+      - DISPATCHARR_LOG_LEVEL=info
+      - TZ=Europe/London
+    volumes:
+      - /mnt/app/gluetun/dispatcharr:/data
+    healthcheck:
+      test: ["CMD", "/dispatcharrpy/bin/python3", "-c", "import socket; [socket.create_connection(('127.0.0.1', p), 3).close() for p in (9999, 9191)]"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 180s
+    labels:
+      deunhealth.restart.on.unhealthy: "true"
+      kuma.dispatcharr.http.name: "Dispatcharr"
+      kuma.dispatcharr.http.url: "http://192.168.1.131:9191"
+    restart: unless-stopped
+
+  deunhealth:
+    image: qmcgaw/deunhealth:v0.3.0
+    container_name: deunhealth
+    network_mode: none
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
