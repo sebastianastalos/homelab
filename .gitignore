@@ -99,5 +99,5 @@ actual-flow/data/
 trading212/data/
 gluetun/config/
 gluetun/tailscale/
-private/
+docs/
 gluetun/dispatcharr/
