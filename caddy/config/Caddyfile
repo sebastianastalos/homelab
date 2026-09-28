@@ -101,3 +101,7 @@ maintainerr.sebastianastalos.com {
 actual.sebastianastalos.com {
     reverse_proxy 192.168.1.131:5006
 }
+
+dispatcharr.sebastianastalos.com {
+    reverse_proxy 192.168.1.131:9191
+}
