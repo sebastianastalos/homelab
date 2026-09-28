@@ -64,6 +64,9 @@ Front-panel LEDs restored via [install_ugreen_leds_controller](https://github.co
 | **Tracearr** | Media server monitoring |
 | **AdGuard Home** | Network-wide DNS filter |
 | **Tailscale** | Remote access mesh VPN |
+| **Gluetun** | VPN tunnel that other containers share for their network |
+| **Dispatcharr** | Live TV stream proxy and guide (EPG) manager |
+| **deunhealth** | Restarts containers that share Gluetun's network if they go unhealthy |
 | **Homepage** | Services dashboard |
 | **code-server** | Web-based VS Code editor |
 | **Prometheus** | Metrics storage |
