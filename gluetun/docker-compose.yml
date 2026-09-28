@@ -69,6 +69,12 @@ services:
     image: qmcgaw/deunhealth:v0.3.0
     container_name: deunhealth
     network_mode: none
+    # Discovers labelled containers only at startup, so start after them
+    depends_on:
+      tailscale-proton:
+        condition: service_started
+      dispatcharr:
+        condition: service_started
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
