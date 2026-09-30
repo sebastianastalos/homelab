@@ -3,7 +3,7 @@ TZ=Europe/London
 SYNC_DAY=7
 SYNC_AT=06:30
 ACTUAL_SERVER_URL=http://192.168.1.131:5006
-ACTUAL_ACCOUNT_NAME=Trading212
+ACTUAL_ACCOUNT_NAME=Trading212 📈
 # Secrets are written straight into .env on this host and never here: the app is
 # excluded from the deploy workflow, and that workflow is what renders op://
 # references. 1Password holds the master copy.
