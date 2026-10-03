@@ -1,7 +1,7 @@
 ---
 services:
   actual:
-    image: ghcr.io/actualbudget/actual:26.9.0
+    image: ghcr.io/actualbudget/actual:26.10.0
     container_name: actual
     # No PUID/PGID support and the image runs as root by default; this keeps
     # /data owned by truenas_admin.
