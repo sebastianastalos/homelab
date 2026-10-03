@@ -1,46 +1,88 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
+  "extends": [
+    "config:recommended"
+  ],
   "docker-compose": {
-    "fileMatch": ["(^|/).+docker-compose\\.yml$"]
+    "fileMatch": [
+      "(^|/).+docker-compose\\.yml$"
+    ]
   },
   "packageRules": [
     {
-      "matchManagers": ["docker-compose"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchManagers": [
+        "docker-compose"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "automerge": false,
-      "labels": ["dependencies", "docker"]
+      "labels": [
+        "dependencies",
+        "docker"
+      ]
     },
     {
-      "matchManagers": ["docker-compose"],
-      "matchUpdateTypes": ["major"],
-      "labels": ["dependencies", "docker", "major"]
+      "matchManagers": [
+        "docker-compose"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "labels": [
+        "dependencies",
+        "docker",
+        "major"
+      ]
     },
     {
-      "matchPackageNames": ["ghcr.io/immich-app/**"],
+      "matchPackageNames": [
+        "ghcr.io/immich-app/**"
+      ],
       "enabled": false,
       "description": "immich pinned to v2 rolling tag, managed manually"
     },
     {
-      "matchPackageNames": ["lscr.io/linuxserver/qbittorrent"],
+      "matchPackageNames": [
+        "lscr.io/linuxserver/qbittorrent"
+      ],
       "allowedVersions": "<10.0.0",
       "description": "block bogus Ubuntu-version tags (e.g. 20.04.1 = qBit 4.3 from 2021). See runtipi/runtipi#1640"
     },
     {
-      "matchPackageNames": ["ghcr.io/connorgallopo/tracearr"],
+      "matchPackageNames": [
+        "ghcr.io/connorgallopo/tracearr"
+      ],
       "versioning": "regex:^supervised-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$",
       "description": "tracearr publishes the supervised variant as supervised-<semver>; the regex also excludes its beta and nightly tags"
     },
     {
-      "matchPackageNames": ["postgres"],
-      "matchUpdateTypes": ["major"],
+      "matchPackageNames": [
+        "lscr.io/linuxserver/jellyfin"
+      ],
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)(?:\\.(?<patch>\\d+))?ubu(?<compatibility>\\d+)-ls(?<build>\\d+)$",
+      "description": "from 12.x LinuxServer.io tags jellyfin as <version>ubu<ubuntu>-ls<build> (e.g. 12.1ubu2604-ls51); default versioning matched none of them, so no 12.x PR was ever raised"
+    },
+    {
+      "matchPackageNames": [
+        "postgres"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "enabled": false,
       "description": "a Postgres major bump needs pg_upgrade or dump/restore first — it will not start on an older data directory. See PR #64, which offered 17 -> 18 for jellystat"
     },
     {
-      "matchManagers": ["github-actions"],
+      "matchManagers": [
+        "github-actions"
+      ],
       "automerge": false,
-      "labels": ["dependencies", "github-actions"]
+      "labels": [
+        "dependencies",
+        "github-actions"
+      ]
     }
   ]
 }
