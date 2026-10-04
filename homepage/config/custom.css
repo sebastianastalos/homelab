@@ -27,3 +27,28 @@ html {
 .service:hover {
   transform: translateY(-3px) !important;
 }
+
+/* Equal-height cards in the top four groups (Media, Arr Stack, Monitoring, System) so rows line up across columns */
+.services-group:nth-child(-n+4) .service-card {
+  min-height: 7rem;
+}
+
+/* Tighter space under each card (default mb-2) so the page fits without scrolling */
+.service-card {
+  margin-bottom: 0.25rem !important;
+}
+
+/* Widget labels on one line - two-line labels made some cards taller.
+   min-width: 0 lets blocks shrink, or nowrap widens the columns and pushes System onto a new row */
+.services-group,
+.service-container,
+.service-block {
+  min-width: 0;
+}
+
+.service-block > div {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
