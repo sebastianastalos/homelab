@@ -7,7 +7,7 @@ FROM node:22.23.3-alpine
 RUN apk add --no-cache bash tini tzdata \
     && addgroup -g 950 actual \
     && adduser -D -u 950 -G actual actual \
-    && npm install -g @actual-app/api@26.9.0
+    && npm install -g @actual-app/api@26.10.0
 
 COPY sync.js /usr/local/lib/sync.js
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
