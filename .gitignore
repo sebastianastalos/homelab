@@ -87,9 +87,6 @@ Desktop.ini
 *.bak
 *.tmp
 cloudcli/home/
-technitium/config/
-technitium/logs/
-trilium/data/
 maintainerr/data/
 actual/data/
 actual-flow/data/
