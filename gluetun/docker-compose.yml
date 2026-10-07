@@ -39,7 +39,7 @@ services:
     restart: unless-stopped
 
   dispatcharr:
-    image: ghcr.io/dispatcharr/dispatcharr:0.31.0
+    image: ghcr.io/dispatcharr/dispatcharr:0.32.0
     container_name: dispatcharr
     network_mode: service:gluetun
     depends_on:
