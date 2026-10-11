@@ -32,8 +32,7 @@ I use a combination of Grafana, Prometheus, Loki and Promtail to collect and vis
 - **Scrutiny** – drive S.M.A.R.T. health monitoring
 - **Dozzle** – real-time Docker log viewer
 - **cAdvisor** – per-container CPU, memory, network and disk I/O metrics
-- **Uptime Kuma** – service uptime monitoring with ntfy push notifications
-- **ntfy** – self-hosted push notification server for alerts
+- **Uptime Kuma** – service uptime monitoring with Pushover notifications
 - **healthchecks.io** – external dead man's switch if the NAS goes offline entirely
 
 <details>
@@ -82,7 +81,6 @@ Front-panel LEDs restored via [install_ugreen_leds_controller](https://github.co
 | **cAdvisor** | Docker container metrics exporter |
 | **Uptime Kuma** | Service uptime monitoring |
 | **AutoKuma** | Auto-creates Uptime Kuma monitors from Docker labels |
-| **ntfy** | Self-hosted push notifications |
 | **Jellystat** | Jellyfin playback statistics and watch history |
 | **Actual Budget** | Self-hosted budgeting |
 | **actual-flow** | Daily import of bank transactions from Lunch Flow into Actual |

@@ -287,8 +287,10 @@ hot-reloads without a restart:
 curl -X POST http://<nas-lan-ip>:9090/-/reload
 ```
 
-Uptime Kuma does availability checks and pushes alerts to a self-hosted **ntfy**
-server. Monitors are not configured by hand: **autokuma** reads `kuma.*` labels
+Uptime Kuma does availability checks and pushes alerts through **Pushover**. A
+self-hosted ntfy server was removed on 2026-10-11: Uptime Kuma had moved to
+Pushover and the arr apps notify through Helmarr, so nothing was publishing to it
+any more. Monitors are not configured by hand: **autokuma** reads `kuma.*` labels
 off each container's compose file and creates them, which is why service compose
 files carry label blocks that look like documentation but are functional.
 healthchecks.io sits outside the house as a dead man's switch for the case where
@@ -472,7 +474,7 @@ duplicated here.
 | Media automation | Sonarr, Radarr, Prowlarr, Bazarr, Profilarr, Autobrr, Seerr |
 | Download clients | SABnzbd |
 | Networking | Tailscale, AdGuard Home, Caddy |
-| Monitoring | Prometheus, Grafana, Loki, Promtail, node-exporter, cAdvisor, Scrutiny, Dozzle, Uptime Kuma, autokuma, ntfy |
+| Monitoring | Prometheus, Grafana, Loki, Promtail, node-exporter, cAdvisor, Scrutiny, Dozzle, Uptime Kuma, autokuma |
 | Photos | Immich |
 | Finance | Actual Budget, actual-flow |
 | Tooling | code-server, Homepage, github-runner |
