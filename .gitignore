@@ -46,7 +46,6 @@ scrutiny/influxdb/
 autobrr/config/
 loki/data/
 caddy/data/
-ntfy/data/
 uptime-kuma/data/
 jellystat/db/
 jellystat/backup/

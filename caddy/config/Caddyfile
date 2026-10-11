@@ -75,10 +75,6 @@ uptime-kuma.sebastianastalos.com {
     reverse_proxy 192.168.1.131:3001
 }
 
-ntfy.sebastianastalos.com {
-    reverse_proxy 192.168.1.131:8095
-}
-
 jellystat.sebastianastalos.com {
     reverse_proxy 192.168.1.131:3004
 }
