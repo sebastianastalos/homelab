@@ -1,0 +1,15 @@
+services:
+  teamarr:
+    image: ghcr.io/pharaoh-labs/teamarr:2.22.0
+    container_name: teamarr
+    user: "950:950"
+    env_file: .env
+    volumes:
+      - /mnt/app/teamarr/data:/app/data
+    ports:
+      - "9195:9195"
+    mem_limit: 512m
+    labels:
+      kuma.teamarr.http.name: "Teamarr"
+      kuma.teamarr.http.url: "https://teamarr.sebastianastalos.com"
+    restart: unless-stopped
