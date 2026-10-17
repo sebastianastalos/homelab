@@ -91,10 +91,6 @@ adguard.sebastianastalos.com {
 
 
 
-maintainerr.sebastianastalos.com {
-    reverse_proxy 192.168.1.131:6246
-}
-
 actual.sebastianastalos.com {
     reverse_proxy 192.168.1.131:5006
 }

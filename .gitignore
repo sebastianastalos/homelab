@@ -86,7 +86,6 @@ Desktop.ini
 *.bak
 *.tmp
 cloudcli/home/
-maintainerr/data/
 actual/data/
 actual-flow/data/
 
