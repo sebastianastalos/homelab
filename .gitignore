@@ -6,6 +6,8 @@
 # 'op inject' in the deploy workflow. Gitleaks is the backstop if a real value
 # ever lands in one.
 !**/.env.tpl
+# .env.infisical holds an Infisical folder path only.
+!**/.env.infisical
 *.key
 *.pem
 *.crt

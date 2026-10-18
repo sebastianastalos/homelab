@@ -6,6 +6,7 @@ on:
       - '**/docker-compose.yml'
       - '**/.env.example'
       - '**/.env.tpl'
+      - '**/.env.infisical'
   workflow_dispatch:
 
 jobs:
@@ -25,7 +26,16 @@ jobs:
             # apps still carry. op:// references cannot be resolved here - this
             # job has no vault access, deliberately - so they become a dummy
             # value. That still exercises every ${VAR} the compose file uses.
-            if [ -f "$APP/.env.tpl" ]; then
+            # .env.infisical holds only a folder path, so those apps must also
+            # carry a .env.example listing their keys.
+            if [ -f "$APP/.env.infisical" ]; then
+              if [ ! -f "$APP/.env.example" ]; then
+                echo "$APP: FAILED (.env.infisical needs a .env.example listing its keys)"
+                FAILED="$FAILED $APP"
+                continue
+              fi
+              grep -v '^#' "$APP/.env.example" | grep -v '^$' > "$APP/.env"
+            elif [ -f "$APP/.env.tpl" ]; then
               sed -E 's#=op://.*#=dummy-value-for-validation#' "$APP/.env.tpl" \
                 | grep -vE '^[[:space:]]*#|^[[:space:]]*$' > "$APP/.env"
             elif [ -f "$APP/.env.example" ]; then
