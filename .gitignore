@@ -47,8 +47,6 @@ autobrr/config/
 loki/data/
 caddy/data/
 uptime-kuma/data/
-jellystat/db/
-jellystat/backup/
 caddy/config/caddy/
 posterizarr/
 
