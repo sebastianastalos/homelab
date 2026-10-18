@@ -19,7 +19,7 @@ Everything is containerised and managed with Docker Compose. Renovate keeps serv
 
 ## **Security & Networking**
 
-Secrets are stored in 1Password and loaded into GitHub Actions workflows via a Service Account, with a self-hosted Infisical being piloted as a second source for app `.env` files. Tailscale provides secure remote access with no open ports. All services are exposed exclusively over the tailnet, with DNS handled by AdGuard Home. Caddy terminates HTTPS using Let's Encrypt wildcard certificates obtained via Porkbun DNS challenge.
+Secrets are stored in 1Password and loaded into GitHub Actions workflows via a Service Account, with a self-hosted Infisical being piloted as a second source for app `.env` files. Tailscale provides secure remote access with no open ports. All services are exposed exclusively over the tailnet, with DNS handled by AdGuard Home. Caddy terminates HTTPS using per-hostname Let's Encrypt certificates obtained via Porkbun DNS challenge.
 
 ## **Monitoring & Observability**
 
