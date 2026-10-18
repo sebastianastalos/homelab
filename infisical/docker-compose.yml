@@ -31,7 +31,7 @@ services:
     restart: unless-stopped
 
   infisical-redis:
-    image: redis:7.4.11-alpine
+    image: redis:8.10.2-alpine
     container_name: infisical-redis
     volumes:
       - /mnt/app/infisical/redis:/data
