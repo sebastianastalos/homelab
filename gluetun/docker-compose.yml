@@ -51,6 +51,8 @@ services:
       - REDIS_HOST=localhost
       - CELERY_BROKER_URL=redis://localhost:6379/0
       - DISPATCHARR_LOG_LEVEL=info
+      - UWSGI_WORKERS=2
+      - CELERY_MAX_WORKERS=2
       - TZ=Europe/London
     volumes:
       - /mnt/app/gluetun/dispatcharr:/data
