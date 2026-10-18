@@ -352,21 +352,42 @@ so no inbound port is needed. It has direct filesystem access to `/mnt/app`,
 which is what lets the deploy step be a file copy plus an API call rather than a
 remote transfer.
 
-Secrets come from **1Password via a service account**, referenced as
-`op://Homelab/<item>/<field>`. A scheduled workflow exercises those references
-weekly, so a broken service-account token is discovered on a Monday morning
-rather than during an outage.
-
-**Infisical is being piloted alongside it**, self-hosted at `infisical.<domain>`.
+App secrets come from a **self-hosted Infisical**, at `infisical.<domain>`.
 An app opts in with a `.env.infisical` holding a folder path; the deploy job
 logs in once with a read-only machine identity and `infisical export`s that
 folder into `.env`, through a temp file with a non-empty check so a failed
-export never truncates a working `.env`. The CLI is fetched per run and pinned
-by hash, because the runner container mounts only `/mnt/app`. The machine
-identity has the built-in Viewer role across all environments: a prod-only
-custom role is paywalled on the self-hosted free tier. The weekly secrets check
-stays on 1Password – it runs on a GitHub-hosted runner, which cannot reach a
-Tailscale-only Infisical.
+export never truncates a working `.env`, and installs it mode 600 owned by the
+app user. The CLI is fetched per run and pinned by hash (one composite action
+shared by deploy and the canary), because the runner container mounts only
+`/mnt/app`. The machine identity has the built-in Viewer role across all
+environments: a prod-only custom role is paywalled on the self-hosted free
+tier. Apps excluded from the deploy render their `.env` by hand from the same
+folder.
+
+A scheduled **canary** runs weekly on the self-hosted runner: Infisical must
+answer its status endpoint, and the deploy identity must log in and export a
+known folder (it reports a key count, never values). As before, the point is
+that a broken credential surfaces on a Monday morning rather than mid-deploy –
+and a dead runner fails it too.
+
+**Bootstrap secrets stay out of Infisical.** Caddy's DNS-challenge key,
+Tailscale, the GitHub runner and Infisical's own encryption key sit on the path
+*to* Infisical – without them it is unreachable or unreadable – so they live in
+hand-made `.env` files on the host, with a human-readable copy in a password
+manager as break-glass.
+
+**History: 1Password, until 2026-10-18.** Secrets used to come from
+**1Password via a service account**, referenced as
+`op://Homelab/<item>/<field>` in committed `.env.tpl` files and rendered with
+`op inject`. A scheduled workflow exercised those references weekly, so a
+broken service-account token was discovered on a Monday morning rather than
+during an outage. Infisical was piloted alongside it and then replaced it,
+because the homelab self-hosts everything it reasonably can; it runs on the NAS
+and is reachable only over Tailscale. The weekly check had stayed on 1Password
+during the pilot only because it ran on a GitHub-hosted runner, which cannot
+reach a Tailscale-only Infisical; moving it to the self-hosted runner removed
+that constraint. The 1Password subscription is kept, but only as human-read
+break-glass – no automation reads it.
 
 **Renovate automerge is off by design.** It covers both compose image tags and
 GitHub Actions versions, and every PR is read before merging – an image bump on
@@ -391,6 +412,11 @@ The list is matched on exact, space-delimited names. It previously used
 silently excluded `actual` too, and that app's deploys began passing while doing
 nothing. Any app whose name is a prefix of a longer excluded one would have hit
 the same trap.
+
+An excluded app can still take its secrets from Infisical; its `.env` is then
+rendered by hand. The hand render strips export's single quotes, because a
+one-shot `docker run --env-file` passes quotes through literally where
+compose strips them.
 
 ---
 

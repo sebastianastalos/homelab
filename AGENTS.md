@@ -71,9 +71,9 @@ The normal path is **git, not the UI**:
 1. Edit `<app>/docker-compose.yml`.
 2. Commit and push to `main`.
 3. The [Deploy workflow](.github/workflows/deploy.yml) fires on any changed
-   `**/docker-compose.yml`, `.env.tpl` or `.env.infisical`, renders the app's
-   `.env` (from Infisical if it has a `.env.infisical`, else `op inject` from
-   `.env.tpl`), copies the compose file into `/mnt/app/<app>/`, and calls
+   `**/docker-compose.yml` or `.env.infisical`, renders the app's `.env` from
+   Infisical (mode 600) if it has a `.env.infisical`, copies the compose file
+   into `/mnt/app/<app>/`, and calls
    `app.update` then `app.pull_images(redeploy: true)` through the TrueNAS
    WebSocket API via [truenas-app.py](scripts/truenas-app.py).
 
@@ -101,7 +101,8 @@ Every step is idempotent, so re-running after a failure is safe.
 
 Still manual afterwards: a `caddy/config/Caddyfile` block plus a Caddy reload,
 `chown -R 950:950` on any config subdirectory, and committing
-`<app>/docker-compose.yml` and `<app>/.env.tpl` (never `.env`).
+`<app>/docker-compose.yml`, `<app>/.env.infisical` and `<app>/.env.example`
+(never `.env`), after adding the app's keys under `/<app>` in Infisical.
 
 ### Six things that will catch you out
 
@@ -117,8 +118,8 @@ Still manual afterwards: a `caddy/config/Caddyfile` block plus a Caddy reload,
    `/mnt/app` can then fail "busy" with nothing visible in `mount` or `lsof`.
    The authoritative check is `sudo grep -l "<path>" /proc/*/mounts`; the
    TrueNAS UI's "processes using dataset" warning gives false positives.
-4. **The Validate workflow synthesises `.env` from `.env.tpl`, falling back to
-   `.env.example`.** An app with a `.env.infisical` must carry a `.env.example`,
+4. **The Validate workflow synthesises `.env` from `.env.example`.** An app
+   with a `.env.infisical` must carry a `.env.example`,
    or validation fails. Any `${VAR}` you reference in a compose file must also
    exist in whichever of those the app has, or
    [validate.yml](.github/workflows/validate.yml) fails on the PR – even though
@@ -141,10 +142,11 @@ Still manual afterwards: a `caddy/config/Caddyfile` block plus a Caddy reload,
 ## Hard rules
 
 - **Never commit a `.env`.** They hold live VPN, API and database credentials
-  and are gitignored. `.env.tpl` (current convention, may hold `op://`
-  references) or `.env.example` (legacy) is the committed template. Apps piloting
-  Infisical commit a `.env.infisical` (one line: the folder path) plus a
-  `.env.example` listing their keys.
+  and are gitignored. `.env.example` (keys, dummy values) is the committed
+  template. Apps with secrets also commit a `.env.infisical` (one line: the
+  Infisical folder path); the deploy renders `.env` from it. Bootstrap apps on
+  the path to Infisical (`caddy`, `tailscale`, `github-runner`, `infisical`)
+  keep hand-made `.env` files instead.
   Check keys are set by testing for presence, never by printing values.
 - **Environment variables go in `env_file: .env`,** not inline `environment:`
   blocks. The exception is `PUID`/`PGID` defaulting, which some files set
@@ -181,8 +183,8 @@ cheap to reason about:
 |---|---|---|
 | [gitleaks.yml](.github/workflows/gitleaks.yml) | every push and PR | committed secrets, full history |
 | [lint.yml](.github/workflows/lint.yml) | every push and PR | YAML syntax, `relaxed` ruleset, 200-char lines |
-| [validate.yml](.github/workflows/validate.yml) | PRs touching compose or `.env.example` | `docker compose config` across every app |
-| [secrets.yml](.github/workflows/secrets.yml) | Mondays 09:00 | 1Password service-account access still works |
+| [validate.yml](.github/workflows/validate.yml) | PRs touching compose, `.env.example` or `.env.infisical` | `docker compose config` across every app |
+| [secrets.yml](.github/workflows/secrets.yml) | Mondays 09:00 (self-hosted) | Infisical is up and the deploy identity can still log in and export (key count only) |
 
 Before calling a compose change done, run the same validation locally:
 
@@ -216,7 +218,7 @@ docker compose -f <app>/docker-compose.yml config --quiet
 | [ARCHITECTURE.md](ARCHITECTURE.md) | You are touching a subsystem and need the service map, the design decisions and their reasoning, or the TrueNAS / ZFS specifics. Describes what exists, not a plan. |
 | [README.md](README.md) | You want the short human overview of what runs here. |
 | HOMELAB.md | You need concrete values – IPs, ports, the real domain, credential locations, host caveats. Gitignored, not in this repo. |
-| `<app>/.env.tpl` or `.env.example` | You need to know what configuration an app takes. `.env.tpl` is the current convention; `.env.example` is what older apps still carry, and what Infisical-sourced apps (those with a `.env.infisical`) carry alongside it. |
+| `<app>/.env.example` | You need to know what configuration an app takes. Apps sourcing secrets from Infisical carry a `.env.infisical` (folder path) alongside it. |
 
 ## Keeping the docs in sync
 

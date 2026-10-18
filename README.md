@@ -1,5 +1,5 @@
 [![Gitleaks](https://github.com/sebastianastalos/homelab/actions/workflows/gitleaks.yml/badge.svg)](https://github.com/sebastianastalos/homelab/actions/workflows/gitleaks.yml)
-[![Secrets](https://github.com/sebastianastalos/homelab/actions/workflows/secrets.yml/badge.svg)](https://github.com/sebastianastalos/homelab/actions/workflows/secrets.yml)
+[![Secrets canary](https://github.com/sebastianastalos/homelab/actions/workflows/secrets.yml/badge.svg)](https://github.com/sebastianastalos/homelab/actions/workflows/secrets.yml)
 [![Deploy](https://github.com/sebastianastalos/homelab/actions/workflows/deploy.yml/badge.svg)](https://github.com/sebastianastalos/homelab/actions/workflows/deploy.yml)
 [![Lint](https://github.com/sebastianastalos/homelab/actions/workflows/lint.yml/badge.svg)](https://github.com/sebastianastalos/homelab/actions/workflows/lint.yml)
 
@@ -19,7 +19,7 @@ Everything is containerised and managed with Docker Compose. Renovate keeps serv
 
 ## **Security & Networking**
 
-Secrets are stored in 1Password and loaded into GitHub Actions workflows via a Service Account, with a self-hosted Infisical being piloted as a second source for app `.env` files. Tailscale provides secure remote access with no open ports. All services are exposed exclusively over the tailnet, with DNS handled by AdGuard Home. Caddy terminates HTTPS using per-hostname Let's Encrypt certificates obtained via Porkbun DNS challenge.
+App secrets live in a self-hosted, Tailscale-only Infisical, which the deploy workflow reads to render each app's `.env`; a weekly canary checks it is reachable and readable, and a password manager holds break-glass copies of the bootstrap secrets. Tailscale provides secure remote access with no open ports. All services are exposed exclusively over the tailnet, with DNS handled by AdGuard Home. Caddy terminates HTTPS using per-hostname Let's Encrypt certificates obtained via Porkbun DNS challenge.
 
 ## **Monitoring & Observability**
 
