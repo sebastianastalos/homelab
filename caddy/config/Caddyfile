@@ -90,3 +90,7 @@ actual.sebastianastalos.com {
 dispatcharr.sebastianastalos.com {
     reverse_proxy 192.168.1.131:9191
 }
+
+infisical.sebastianastalos.com {
+    reverse_proxy 192.168.1.131:8088
+}
