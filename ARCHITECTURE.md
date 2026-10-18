@@ -357,22 +357,34 @@ Secrets come from **1Password via a service account**, referenced as
 weekly, so a broken service-account token is discovered on a Monday morning
 rather than during an outage.
 
+**Infisical is being piloted alongside it**, self-hosted at `infisical.<domain>`.
+An app opts in with a `.env.infisical` holding a folder path; the deploy job
+logs in once with a read-only machine identity and `infisical export`s that
+folder into `.env`, through a temp file with a non-empty check so a failed
+export never truncates a working `.env`. The CLI is fetched per run and pinned
+by hash, because the runner container mounts only `/mnt/app`. The machine
+identity has the built-in Viewer role across all environments: a prod-only
+custom role is paywalled on the self-hosted free tier. The weekly secrets check
+stays on 1Password – it runs on a GitHub-hosted runner, which cannot reach a
+Tailscale-only Infisical.
+
 **Renovate automerge is off by design.** It covers both compose image tags and
 GitHub Actions versions, and every PR is read before merging – an image bump on
 a live media server is not a change worth applying unattended.
 
 ### Exclusions, and why each is excluded
 
-`caddy`, `tailscale`, `immich`, `github-runner`, `cadvisor` and
-`actual-flow` are skipped by the deploy workflow. The reasons fall into four
-groups: services whose restart would sever the connection the deploy is
-travelling over (`tailscale`, `github-runner`), services other containers depend
-on for ingress (`caddy`), multi-container apps bundling their own database, where
-an unattended `pull_images(redeploy: true)` risks restarting an app server
-against a database mid-migration (`immich`; `jellystat` was excluded for the
+`caddy`, `tailscale`, `immich`, `infisical`, `github-runner`, `cadvisor`,
+`actual-flow` and `trading212` are skipped by the deploy workflow. The reasons
+fall into four groups: services whose restart would sever the connection the
+deploy is travelling over (`tailscale`, `github-runner`), services other
+containers depend on for ingress (`caddy`), multi-container apps bundling their
+own database, where an unattended `pull_images(redeploy: true)` risks restarting
+an app server against a database mid-migration (`immich`, `infisical` – which
+other deploys also read their secrets from; `jellystat` was excluded for the
 same reason until it was removed), and apps whose image is
 built on the host and exists in no registry, so `pull_images` has nothing to pull
-(`actual-flow`).
+(`actual-flow`, `trading212`).
 
 The list is matched on exact, space-delimited names. It previously used
 `grep -w`, which treats a hyphen as a non-word character: adding `actual-flow`
