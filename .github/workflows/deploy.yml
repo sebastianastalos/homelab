@@ -120,7 +120,7 @@ jobs:
                 echo "::error::Infisical returned no secrets for $APP at $INFISICAL_PATH"
                 exit 1
               fi
-              install -m 644 -o 950 -g 950 "/tmp/$APP.env" "/mnt/app/$APP/.env"
+              install -m 600 -o 950 -g 950 "/tmp/$APP.env" "/mnt/app/$APP/.env"
               rm -f "/tmp/$APP.env"
             # An app with a .env.tpl has 1Password as the source of truth for its
             # secrets: render op:// references into .env before redeploying.
