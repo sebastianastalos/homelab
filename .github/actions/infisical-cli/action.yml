@@ -1,0 +1,21 @@
+name: Install Infisical CLI
+description: >-
+  Fetch the pinned Infisical CLI into RUNNER_TEMP and put it on PATH. The only
+  repo copy of the pin; bump it together with the host binary.
+
+runs:
+  using: composite
+  steps:
+    # The runner container only mounts /mnt/app, so the host's copy of the
+    # CLI is out of reach. Fetched per run, pinned by hash.
+    - name: Install Infisical CLI
+      shell: bash
+      run: |
+        cd "$RUNNER_TEMP"
+        curl -fsSL -o infisical.tar.gz \
+          https://github.com/Infisical/cli/releases/download/v0.43.138/cli_0.43.138_linux_amd64.tar.gz
+        echo "45a98380964650e4cc2b57ff5361d174afb55b3daf7c2465640d3a7bb7550f92  infisical.tar.gz" \
+          | sha256sum -c -
+        mkdir -p infisical-cli
+        tar -xzf infisical.tar.gz -C infisical-cli infisical
+        echo "$RUNNER_TEMP/infisical-cli" >> "$GITHUB_PATH"

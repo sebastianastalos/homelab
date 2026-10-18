@@ -6,7 +6,6 @@ on:
       - main
     paths:
       - '**/docker-compose.yml'
-      - '**/.env.tpl'
       - '**/.env.infisical'
   workflow_dispatch:
 
@@ -37,46 +36,32 @@ jobs:
           fi
           echo "Diffing: $BASE..HEAD"
           CHANGED=$(git diff --name-only "$BASE" HEAD \
-            | grep -E '/(docker-compose\.yml|\.env\.tpl|\.env\.infisical)$' \
-            | sed -E 's#/(docker-compose\.yml|\.env\.tpl|\.env\.infisical)$##' \
+            | grep -E '/(docker-compose\.yml|\.env\.infisical)$' \
+            | sed -E 's#/(docker-compose\.yml|\.env\.infisical)$##' \
             | sort -u | tr '\n' ' ' | xargs)
           echo "apps=$CHANGED" >> $GITHUB_OUTPUT
           echo "Changed apps: $CHANGED"
-
-      - name: Install 1Password CLI
-        if: steps.changed.outputs.apps != ''
-        uses: 1password/install-cli-action@v4
-
-      # The runner container only mounts /mnt/app, so the host's copy of the
-      # CLI is out of reach. Fetched per run, pinned by hash.
-      - name: Install Infisical CLI
-        if: steps.changed.outputs.apps != ''
-        run: |
           NEEDED=""
-          for APP in ${{ steps.changed.outputs.apps }}; do
+          for APP in $CHANGED; do
             if [ -f "$GITHUB_WORKSPACE/$APP/.env.infisical" ] \
                && ! echo " $EXCLUDED " | grep -qF " $APP "; then
               NEEDED="$APP"
             fi
           done
-          if [ -z "$NEEDED" ]; then
+          if [ -n "$NEEDED" ]; then
+            echo "infisical=true" >> $GITHUB_OUTPUT
+          else
             echo "No changed app uses Infisical"
-            exit 0
           fi
-          cd "$RUNNER_TEMP"
-          curl -fsSL -o infisical.tar.gz \
-            https://github.com/Infisical/cli/releases/download/v0.43.138/cli_0.43.138_linux_amd64.tar.gz
-          echo "45a98380964650e4cc2b57ff5361d174afb55b3daf7c2465640d3a7bb7550f92  infisical.tar.gz" \
-            | sha256sum -c -
-          mkdir -p infisical-cli
-          tar -xzf infisical.tar.gz -C infisical-cli infisical
-          echo "$RUNNER_TEMP/infisical-cli" >> "$GITHUB_PATH"
+
+      - name: Install Infisical CLI
+        if: steps.changed.outputs.infisical == 'true'
+        uses: ./.github/actions/infisical-cli
 
       - name: Deploy changed apps
         if: steps.changed.outputs.apps != ''
         env:
           TRUENAS_API_KEY: ${{ secrets.TRUENAS_API_KEY }}
-          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
           INFISICAL_UNIVERSAL_AUTH_CLIENT_ID: ${{ secrets.INFISICAL_CLIENT_ID }}
           INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET: ${{ secrets.INFISICAL_CLIENT_SECRET }}
         run: |
@@ -92,9 +77,10 @@ jobs:
               continue
             fi
             # An app with a .env.infisical has Infisical as the source of truth:
-            # the file holds the folder path to export from. Same temp-file
-            # pattern as the op branch below. Credentials and token reach the
-            # CLI through env, never argv; one login serves every app.
+            # the file holds the folder path to export from. Rendered to a temp
+            # file first so a failed or empty export aborts the step (bash -e)
+            # without having truncated a working .env. Credentials and token
+            # reach the CLI through env, never argv; one login serves every app.
             if [ -f "$GITHUB_WORKSPACE/$APP/.env.infisical" ]; then
               INFISICAL_PATH=$(awk '{ sub(/#.*/, ""); gsub(/[[:space:]]/, "") } NF { print; exit }' \
                 "$GITHUB_WORKSPACE/$APP/.env.infisical")
@@ -121,15 +107,6 @@ jobs:
                 exit 1
               fi
               install -m 600 -o 950 -g 950 "/tmp/$APP.env" "/mnt/app/$APP/.env"
-              rm -f "/tmp/$APP.env"
-            # An app with a .env.tpl has 1Password as the source of truth for its
-            # secrets: render op:// references into .env before redeploying.
-            # Rendered to a temp file first so a failed lookup aborts the step
-            # (bash -e) without having truncated a working .env.
-            elif [ -f "$GITHUB_WORKSPACE/$APP/.env.tpl" ]; then
-              echo "Rendering $APP/.env from .env.tpl"
-              op inject --force -i "$GITHUB_WORKSPACE/$APP/.env.tpl" -o "/tmp/$APP.env"
-              install -m 644 -o 950 -g 950 "/tmp/$APP.env" "/mnt/app/$APP/.env"
               rm -f "/tmp/$APP.env"
             fi
             echo "Restarting $APP..."
