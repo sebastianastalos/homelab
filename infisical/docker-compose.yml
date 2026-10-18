@@ -30,6 +30,19 @@ services:
       retries: 10
     restart: unless-stopped
 
+  infisical-backup:
+    image: prodrigestivill/postgres-backup-local:16-alpine-d257e5d
+    container_name: infisical-backup
+    env_file: .env
+    user: "70:70"
+    depends_on:
+      infisical-db:
+        condition: service_healthy
+    volumes:
+      - /mnt/storage/backups/infisical:/backups
+    mem_limit: 64m
+    restart: unless-stopped
+
   infisical-redis:
     image: redis:7.4.11-alpine
     container_name: infisical-redis
