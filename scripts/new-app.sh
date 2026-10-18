@@ -26,7 +26,8 @@ usage: new-app.sh <appname> [--icon <url> | --no-icon]
   --no-icon     leave the icon alone.
 
 Pass 1 creates the dataset, fixes ownership, and writes a commented
-docker-compose.yml template plus .env.tpl. It then stops.
+docker-compose.yml template plus .env.infisical and .env.example. It then
+stops.
 
 Pass 2 runs once the compose file has an uncommented "services:" key:
   - docker compose config  (syntax)
@@ -258,23 +259,21 @@ sudo chmod 755 "$APPDIR"
 
 [ -e "$APPDIR/.env" ] || : > "$APPDIR/.env"
 
-# .env.tpl is the committed source of truth: literals for ordinary config,
-# op:// references for anything secret. .env itself is generated and gitignored.
-# Older apps predate this and still carry a hand-maintained .env.example; leave
-# those alone rather than scaffolding a second, conflicting file.
-if [ ! -e "$APPDIR/.env.tpl" ] && [ ! -e "$APPDIR/.env.example" ]; then
-    sed "s/APPNAME/$APP/g" > "$APPDIR/.env.tpl" <<'EOF'
+# Infisical is the source of truth: .env.infisical holds the folder path the
+# deploy workflow exports .env from, .env.example lists the keys with dummy
+# values for the Validate workflow. .env itself is generated and gitignored.
+# An app that already carries a hand-maintained .env.example is left alone
+# rather than scaffolding a second, conflicting setup.
+if [ ! -e "$APPDIR/.env.infisical" ] && [ ! -e "$APPDIR/.env.example" ]; then
+    echo "/$APP" > "$APPDIR/.env.infisical"
+    info "wrote $APPDIR/.env.infisical (/$APP)"
+    sed "s/APPNAME/$APP/g" > "$APPDIR/.env.example" <<'EOF'
+# Every key in Infisical under /APPNAME (prod), with a dummy value - never a
+# real one. The Validate workflow builds a throwaway .env from this file.
 TZ=Europe/London
-# Secrets go in 1Password and are referenced here - never a literal value.
-# Ordinary config (URLs, ports, flags) can be a literal.
-#
-# Create the item first, from a machine with the op CLI:
-#   op item create --category=password --title=APPNAME-deploy --vault=Homelab \
-#     'API_KEY[password]=<value>'
-# then reference it, and the deploy workflow renders it into .env:
-#   API_KEY=op://Homelab/APPNAME-deploy/API_KEY
+# API_KEY=changeme
 EOF
-    info "wrote template $APPDIR/.env.tpl"
+    info "wrote template $APPDIR/.env.example"
 fi
 
 if [ ! -e "$COMPOSE" ] || [ ! -s "$COMPOSE" ]; then
@@ -310,8 +309,9 @@ if ! grep -qE '^services:' "$COMPOSE"; then
 
 Pass 1 done. Next:
   1. edit $COMPOSE (uncomment the template)
-  2. put this app's config in $APPDIR/.env.tpl - literals for ordinary values,
-     op:// references for secrets (see the comments in that file)
+  2. add every key this app needs, secret or not, under /$APP in Infisical
+     (prod) - the deploy fails on an empty folder - and list the same keys
+     with dummy values in $APPDIR/.env.example
   3. re-run: scripts/new-app.sh $APP
 EOF
     exit 0
@@ -320,27 +320,26 @@ fi
 # --- pass 2: validate, register, verify -------------------------------------
 
 # Compose reads .env, so it has to exist with real values before the app starts.
-# op is not installed on the NAS, so op:// references can only be resolved by
-# the deploy workflow - a template containing them is completed by a push, not
-# by this script. A template of plain literals is copied straight through.
-# Never overwrites a populated .env: delete it to force a re-render.
-render_env_from_tpl() {
-    [ -f "$APPDIR/.env.tpl" ] || return 0
+# The deploy workflow renders it from Infisical on push; this script never runs
+# the export itself (it would need the host CLI's interactive login), it only
+# prints the command for rendering by hand. Never touches a populated .env.
+check_env_infisical() {
+    [ -f "$APPDIR/.env.infisical" ] || return 0
     if [ -s "$APPDIR/.env" ]; then
-        info ".env already populated - leaving it (delete it to re-render)"
+        info ".env already populated - leaving it"
         return 0
     fi
-    if grep -q 'op://' "$APPDIR/.env.tpl"; then
-        warn "$APP/.env.tpl has op:// references, which only the deploy workflow resolves"
-        warn "the app will start without them - commit and push to render .env, then it restarts with secrets"
-        return 0
-    fi
-    grep -vE '^[[:space:]]*#|^[[:space:]]*$' "$APPDIR/.env.tpl" > "$APPDIR/.env"
-    info "rendered $APPDIR/.env from .env.tpl (no op:// references to resolve)"
+    local path
+    path=$(awk '{ sub(/#.*/, ""); gsub(/[[:space:]]/, "") } NF { print; exit }' "$APPDIR/.env.infisical")
+    warn "$APP/.env is empty - the app will start without its config"
+    warn "commit and push to have the deploy workflow render it from Infisical $path, or render it by hand:"
+    warn "  (umask 077; infisical export --domain https://infisical.sebastianastalos.com \\"
+    warn "     --projectId ce6d3fcb-163a-4230-91c7-f28b8d738c94 --env prod --path $path \\"
+    warn "     --format dotenv --silent -o $APPDIR/.env)"
 }
 
 info "validating $COMPOSE"
-render_env_from_tpl
+check_env_infisical
 sudo docker compose -f "$COMPOSE" config --quiet || die "compose file is invalid"
 
 FLOATING=$(compose_floating_tags || true)
@@ -417,5 +416,6 @@ Done. Remaining manual steps, if they apply:
   - config subdirs need the container's user:  sudo chown -R 950:950 $APPDIR/<subdir>
   - reverse proxy: add a block to caddy/config/Caddyfile, then reload Caddy by
     hand (caddy is excluded from the deploy workflow)
-  - commit $APP/docker-compose.yml and $APP/.env.tpl (never .env)
+  - commit $APP/docker-compose.yml, $APP/.env.infisical and $APP/.env.example
+    (never .env)
 EOF
