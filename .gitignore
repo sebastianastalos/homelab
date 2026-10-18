@@ -30,7 +30,6 @@ radarr/config/
 prowlarr/config/
 sabnzbd/config/
 seerr/config/
-code-server/config/
 immich/library/
 immich/postgres/
 profilarr/config/

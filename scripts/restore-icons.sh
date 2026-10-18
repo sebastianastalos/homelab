@@ -10,7 +10,6 @@ declare -A ICONS=(
   [adguard]=adguard-home
   [aiostreams]=stremio
   [bazarr]=bazarr
-  [code-server]=code-server
   [gluetun]=gluetun
   [grafana]=grafana
   [homepage]=homepage
