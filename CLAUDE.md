@@ -11,17 +11,16 @@ below is specific to Claude Code and adds to it rather than repeating it.
 
 ## Establish which shell you are in – first, every time
 
-This repo is edited from two places with very different powers. In the
-code-server container there is no `docker`, no `zfs`, no `midclt`, and `sudo`
-prompts for a password; on the TrueNAS host all of those work. **Half of what
-you might reasonably try to run is unavailable in one of them.**
+Sessions normally run on the TrueNAS host over SSH, where `docker`, `zfs` and
+`midclt` all work (the code-server sandbox was removed on 2026-10-18). If you
+are ever somewhere else – another machine, a container – half of what you might
+reasonably try to run will be unavailable, so check first:
 
 ```bash
 hostname; ls /.dockerenv 2>/dev/null && echo "in container"; which docker zfs midclt
 ```
 
-The full comparison is in
-[AGENTS.md § Two shells](AGENTS.md#two-shells-very-different-powers).
+Details in [AGENTS.md § Where you are running](AGENTS.md#where-you-are-running).
 
 Two rules follow from it:
 

@@ -67,7 +67,6 @@ Front-panel LEDs restored via [install_ugreen_leds_controller](https://github.co
 | **Dispatcharr** | Live TV stream proxy and guide (EPG) manager |
 | **deunhealth** | Restarts containers that share Gluetun's network if they go unhealthy |
 | **Homepage** | Services dashboard |
-| **code-server** | Web-based VS Code editor |
 | **Prometheus** | Metrics storage |
 | **Grafana** | Metrics dashboards |
 | **Node Exporter** | Host metrics exporter |
@@ -81,7 +80,6 @@ Front-panel LEDs restored via [install_ugreen_leds_controller](https://github.co
 | **cAdvisor** | Docker container metrics exporter |
 | **Uptime Kuma** | Service uptime monitoring |
 | **AutoKuma** | Auto-creates Uptime Kuma monitors from Docker labels |
-| **Jellystat** | Jellyfin playback statistics and watch history |
 | **Actual Budget** | Self-hosted budgeting |
 | **actual-flow** | Daily import of bank transactions from Lunch Flow into Actual |
 

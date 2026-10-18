@@ -35,31 +35,23 @@ monitoring stack, and a reverse proxy reachable only over Tailscale.
 environment to reproduce it in, and no staging to try a change against. A change
 is either correct or it is broken in production.
 
-### Two shells, very different powers
+### Where you are running
 
-This is the single most important thing to establish before you start work,
-because half of what you might try to run is unavailable in one of them.
+Sessions run **on the TrueNAS host** as `truenas_admin`, reached over SSH
+(Termius, Orca) or the TrueNAS UI shell: `/mnt/app` is native, and `docker`,
+`midclt` (both via passwordless `sudo`) and `zfs` / `zpool` all work. The
+code-server container – a sandbox with none of those – was removed on
+2026-10-18.
 
-| | code-server container | TrueNAS host |
-|---|---|---|
-| Reached via | the code-server web UI | SSH, or the TrueNAS UI shell |
-| User | `abc` (uid 950, maps to `truenas_admin`) | `truenas_admin` |
-| `/mnt/app` | bind-mounted, read-write | native |
-| `docker` | **absent** | yes, via `sudo` |
-| `zfs` / `zpool` | **absent** | yes |
-| `midclt` | **absent** | yes, via `sudo` |
-| `sudo` | prompts for a password | passwordless |
-| git push | works (key is under `/mnt/app`) | works |
-
-**Check which one you are in before planning any command sequence:**
+If a session ever lacks them (another machine, a container), check before
+planning any command sequence:
 
 ```bash
 hostname; ls /.dockerenv 2>/dev/null && echo "in container"; which docker zfs midclt
 ```
 
-If you are in the container and the task needs Docker, ZFS or the TrueNAS API,
-say so and hand the commands over rather than guessing at their output. Do not
-report a container-side check as if it reflected the host.
+and hand host commands over rather than guessing at their output. Never report
+a check from somewhere else as the state of the running system.
 
 ### Inspecting the running system (host only)
 
@@ -85,7 +77,7 @@ The normal path is **git, not the UI**:
 
 **Several apps are excluded from that workflow** and must be redeployed by hand
 from the TrueNAS Apps UI: `caddy`, `tailscale`, `immich`, `github-runner`,
-`cadvisor`, `jellystat`, `actual-flow`. Pushing a compose change
+`cadvisor`, `actual-flow`. Pushing a compose change
 for one of those looks successful and does nothing. The exclusion list lives in
 [deploy.yml](.github/workflows/deploy.yml) – check it before promising a deploy.
 
@@ -118,8 +110,9 @@ Still manual afterwards: a `caddy/config/Caddyfile` block plus a Caddy reload,
    "stopped" while the container runs fine.** Trust `sudo docker ps`, not the
    UI. To reconcile: `sudo docker stop`/`rm` the container, then
    `sudo midclt call app.start <app>`.
-3. **code-server pins ZFS datasets in its mount namespace.** `zfs destroy`
-   under `/mnt/app` can fail "busy" with nothing visible in `mount` or `lsof`.
+3. **A container bind-mounting `/mnt/app` can pin ZFS datasets in its mount
+   namespace** (`github-runner` does; code-server did). `zfs destroy` under
+   `/mnt/app` can then fail "busy" with nothing visible in `mount` or `lsof`.
    The authoritative check is `sudo grep -l "<path>" /proc/*/mounts`; the
    TrueNAS UI's "processes using dataset" warning gives false positives.
 4. **The Validate workflow synthesises `.env` from `.env.tpl`, falling back to

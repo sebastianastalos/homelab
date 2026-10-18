@@ -298,7 +298,9 @@ the NAS itself is down and none of the above can report anything.
 
 Scrutiny reads drive S.M.A.R.T. data and runs privileged because it needs raw
 block-device access. Dozzle gives a live log view without going through Grafana.
-Jellystat holds Jellyfin playback statistics and bundles **its own Postgres**.
+Jellyfin playback statistics live in Tracearr. Jellystat (with its own bundled
+Postgres) did the same job until its history was imported into Tracearr; it was
+removed on 2026-10-18 to free RAM.
 
 ### The graphite-exporter dead end (removed)
 
@@ -361,13 +363,14 @@ a live media server is not a change worth applying unattended.
 
 ### Exclusions, and why each is excluded
 
-`caddy`, `tailscale`, `immich`, `github-runner`, `cadvisor`, `jellystat` and
+`caddy`, `tailscale`, `immich`, `github-runner`, `cadvisor` and
 `actual-flow` are skipped by the deploy workflow. The reasons fall into four
 groups: services whose restart would sever the connection the deploy is
 travelling over (`tailscale`, `github-runner`), services other containers depend
 on for ingress (`caddy`), multi-container apps bundling their own database, where
 an unattended `pull_images(redeploy: true)` risks restarting an app server
-against a database mid-migration (`immich`, `jellystat`), and apps whose image is
+against a database mid-migration (`immich`; `jellystat` was excluded for the
+same reason until it was removed), and apps whose image is
 built on the host and exists in no registry, so `pull_images` has nothing to pull
 (`actual-flow`).
 
@@ -381,12 +384,12 @@ the same trap.
 
 ## How agents reach the system
 
-There are two places an agent can run, with materially different capabilities –
-the comparison table is in
-[AGENTS.md § Two shells](AGENTS.md#two-shells-very-different-powers). The short
-version: **code-server is a sandbox** with no `docker`, `zfs` or `midclt` and
-password-gated `sudo`, so an agent there can edit this repo but cannot observe
-or change the running system. An agent on the host can do all of it.
+Agents run **on the TrueNAS host** over SSH (Termius, Orca), where `docker`,
+`zfs` and `midclt` all work. Until 2026-10-18 there was a second place: the
+code-server container, a sandbox with no `docker`, `zfs` or `midclt` and
+password-gated `sudo`, where an agent could edit this repo but not observe or
+change the running system. It was removed to free RAM once editing had moved to
+SSH clients.
 
 Claude Code is installed on the host under `/mnt/app/.claude-home/`, with
 `~/.claude` and `~/.local` symlinked into it, because `/home` is `noexec` and
@@ -470,11 +473,11 @@ duplicated here.
 
 | Role | Services |
 |---|---|
-| Media serving | Jellyfin, Jellystat, Tracearr |
+| Media serving | Jellyfin, Tracearr |
 | Media automation | Sonarr, Radarr, Prowlarr, Bazarr, Profilarr, Autobrr, Seerr |
 | Download clients | SABnzbd |
 | Networking | Tailscale, AdGuard Home, Caddy |
 | Monitoring | Prometheus, Grafana, Loki, Promtail, node-exporter, cAdvisor, Scrutiny, Dozzle, Uptime Kuma, autokuma |
 | Photos | Immich |
 | Finance | Actual Budget, actual-flow |
-| Tooling | code-server, Homepage, github-runner |
+| Tooling | Homepage, github-runner |
