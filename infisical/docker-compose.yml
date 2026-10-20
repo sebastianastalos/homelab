@@ -1,6 +1,6 @@
 services:
   infisical:
-    image: infisical/infisical:v0.166.8
+    image: infisical/infisical:v0.166.9
     container_name: infisical
     env_file: .env
     depends_on:
