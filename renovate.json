@@ -37,6 +37,11 @@
       "description": "from 12.x LinuxServer.io tags jellyfin as <version>ubu<ubuntu>-ls<build> (e.g. 12.1ubu2604-ls51); default versioning matched none of them, so no 12.x PR was ever raised"
     },
     {
+      "matchPackageNames": ["lscr.io/linuxserver/jellyfin"],
+      "enabled": false,
+      "description": "held on one stable release; upgrade by hand following the Jellyfin upgrade runbook"
+    },
+    {
       "matchPackageNames": ["postgres"],
       "matchUpdateTypes": ["major"],
       "enabled": false,
