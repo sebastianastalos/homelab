@@ -14,16 +14,23 @@ quicklaunch:
   provider: google
 layout:
   Media:
-    style: column
+    style: row
+    columns: 4
   Arr Stack:
-    style: column
+    style: row
+    columns: 5
   Monitoring:
-    style: column
+    style: row
+    columns: 4
   System:
-    style: column
+    style: row
+    columns: 4
   Tools:
-    style: column
+    style: row
+    columns: 4
   Apps:
-    style: column
+    style: row
+    columns: 4
   External:
-    style: column
+    style: row
+    columns: 5
