@@ -90,5 +90,3 @@ gluetun/tailscale/
 docs/
 gluetun/dispatcharr/
 teamarr/data/
-infisical/postgres/
-infisical/redis/

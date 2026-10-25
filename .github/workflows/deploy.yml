@@ -12,7 +12,7 @@ jobs:
   deploy:
     runs-on: self-hosted
     env:
-      EXCLUDED: caddy tailscale immich infisical github-runner cadvisor actual-flow trading212
+      EXCLUDED: caddy tailscale immich github-runner cadvisor actual-flow trading212
     steps:
       - name: Checkout
         uses: actions/checkout@v7
