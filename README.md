@@ -19,7 +19,7 @@ Everything is containerised and managed with Docker Compose. Renovate keeps serv
 
 ## **Security & Networking**
 
-App secrets live in a self-hosted, Tailscale-only Infisical, which the deploy workflow reads to render each app's `.env`; a weekly canary checks it is reachable and readable, and a password manager holds break-glass copies of the bootstrap secrets. Tailscale provides secure remote access with no open ports. All services are exposed exclusively over the tailnet, with DNS handled by AdGuard Home. Caddy terminates HTTPS using per-hostname Let's Encrypt certificates obtained via Porkbun DNS challenge.
+App secrets live in gitignored `.env` files on the host, with break-glass copies in a password manager. Tailscale provides secure remote access with no open ports. All services are exposed exclusively over the tailnet, with DNS handled by AdGuard Home. Caddy terminates HTTPS using per-hostname Let's Encrypt certificates obtained via Porkbun DNS challenge.
 
 ## **Monitoring & Observability**
 

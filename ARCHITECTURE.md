@@ -352,29 +352,47 @@ so no inbound port is needed. It has direct filesystem access to `/mnt/app`,
 which is what lets the deploy step be a file copy plus an API call rather than a
 remote transfer.
 
-App secrets come from a **self-hosted Infisical**, at `infisical.<domain>`.
-An app opts in with a `.env.infisical` holding a folder path; the deploy job
-logs in once with a read-only machine identity and `infisical export`s that
-folder into `.env`, through a temp file with a non-empty check so a failed
-export never truncates a working `.env`, and installs it mode 600 owned by the
-app user. The CLI is fetched per run and pinned by hash (one composite action
-shared by deploy and the canary), because the runner container mounts only
-`/mnt/app`. The machine identity has the built-in Viewer role across all
-environments: a prod-only custom role is paywalled on the self-hosted free
-tier. Apps excluded from the deploy render their `.env` by hand from the same
-folder.
+App secrets live in **hand-maintained `.env` files on the host** – gitignored,
+mode 600, owned by the app user – with a human-readable copy in 1Password as
+break-glass. The deploy workflow copies the compose file and leaves `.env`
+alone; each app's committed `.env.example` lists its keys with dummy values so
+the Validate workflow can still exercise every `${VAR}`.
 
-A scheduled **canary** runs weekly on the self-hosted runner: Infisical must
-answer its status endpoint, and the deploy identity must log in and export a
-known folder (it reports a key count, never values). As before, the point is
-that a broken credential surfaces on a Monday morning rather than mid-deploy –
-and a dead runner fails it too.
+**History: Infisical, 2026-10-18 to 2026-10-25.** For a week, app secrets came
+from a **self-hosted Infisical** at `infisical.<domain>`, and it is worth
+recording how that worked and why it went. An app opted in with a
+`.env.infisical` holding a folder path; the deploy job logged in once with a
+read-only machine identity and `infisical export`ed that folder into `.env`,
+through a temp file with a non-empty check so a failed export never truncated a
+working `.env`, and installed it mode 600 owned by the app user. The CLI was
+fetched per run and pinned by hash (one composite action shared by deploy and
+the canary), because the runner container mounts only `/mnt/app`. The machine
+identity had the built-in Viewer role across all environments: a prod-only
+custom role is paywalled on the self-hosted free tier. Apps excluded from the
+deploy rendered their `.env` by hand from the same folder.
 
-**Bootstrap secrets stay out of Infisical.** Caddy's DNS-challenge key,
-Tailscale, the GitHub runner and Infisical's own encryption key sit on the path
-*to* Infisical – without them it is unreachable or unreadable – so they live in
-hand-made `.env` files on the host, with a human-readable copy in a password
-manager as break-glass.
+A scheduled **canary** ran weekly on the self-hosted runner: Infisical had to
+answer its status endpoint, and the deploy identity had to log in and export a
+known folder (it reported a key count, never values), so a broken credential
+surfaced on a Monday morning rather than mid-deploy – and a dead runner failed
+it too.
+
+**Bootstrap secrets stayed out of Infisical.** Caddy's DNS-challenge key,
+Tailscale, the GitHub runner and Infisical's own encryption key sat on the path
+*to* Infisical – without them it was unreachable or unreadable – so they were
+always hand-made `.env` files with a break-glass copy. That is now simply how
+every app works.
+
+**Why it was retired.** Infisical's server, Postgres and Redis together used
+about 735 MB of RAM on a 16 GB box that had under 1 GB free, to hold the
+secrets of three apps (gluetun, teamarr, trading212). It also added a service
+to upgrade and back up, an `ENCRYPTION_KEY` whose loss would make every stored
+secret unreadable, and a dependency in the deploy path. With so few secrets the
+central store bought little that hand-made `.env` files plus 1Password did not
+already give, so it was removed rather than tuned. The 1Password service
+account was deliberately *not* brought back: nothing needs to render secrets
+automatically any more. Revisit a secrets store if many more apps gain real
+secrets, or after the RAM upgrade.
 
 **History: 1Password, until 2026-10-18.** Secrets used to come from
 **1Password via a service account**, referenced as
@@ -395,15 +413,14 @@ a live media server is not a change worth applying unattended.
 
 ### Exclusions, and why each is excluded
 
-`caddy`, `tailscale`, `immich`, `infisical`, `github-runner`, `cadvisor`,
+`caddy`, `tailscale`, `immich`, `github-runner`, `cadvisor`,
 `actual-flow` and `trading212` are skipped by the deploy workflow. The reasons
 fall into four groups: services whose restart would sever the connection the
 deploy is travelling over (`tailscale`, `github-runner`), services other
 containers depend on for ingress (`caddy`), multi-container apps bundling their
 own database, where an unattended `pull_images(redeploy: true)` risks restarting
-an app server against a database mid-migration (`immich`, `infisical` – which
-other deploys also read their secrets from; `jellystat` was excluded for the
-same reason until it was removed), and apps whose image is
+an app server against a database mid-migration (`immich`; `jellystat` and
+`infisical` were excluded for the same reason until they were removed), and apps whose image is
 built on the host and exists in no registry, so `pull_images` has nothing to pull
 (`actual-flow`, `trading212`).
 
@@ -413,9 +430,8 @@ silently excluded `actual` too, and that app's deploys began passing while doing
 nothing. Any app whose name is a prefix of a longer excluded one would have hit
 the same trap.
 
-An excluded app can still take its secrets from Infisical; its `.env` is then
-rendered by hand. The hand render strips export's single quotes, because a
-one-shot `docker run --env-file` passes quotes through literally where
+An excluded app run with a one-shot `docker run --env-file` (trading212) needs
+its `.env` values unquoted: `--env-file` passes quotes through literally where
 compose strips them.
 
 ---
