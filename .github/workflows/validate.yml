@@ -5,7 +5,6 @@ on:
     paths:
       - '**/docker-compose.yml'
       - '**/.env.example'
-      - '**/.env.infisical'
   workflow_dispatch:
 
 jobs:
@@ -23,16 +22,8 @@ jobs:
             # Synthesise a throwaway .env from .env.example so compose
             # interpolation resolves. This job has no secrets access,
             # deliberately - dummy values still exercise every ${VAR} the
-            # compose file uses. .env.infisical holds only a folder path, so
-            # those apps must also carry a .env.example listing their keys.
-            if [ -f "$APP/.env.infisical" ]; then
-              if [ ! -f "$APP/.env.example" ]; then
-                echo "$APP: FAILED (.env.infisical needs a .env.example listing its keys)"
-                FAILED="$FAILED $APP"
-                continue
-              fi
-              grep -v '^#' "$APP/.env.example" | grep -v '^$' > "$APP/.env"
-            elif [ -f "$APP/.env.example" ]; then
+            # compose file uses.
+            if [ -f "$APP/.env.example" ]; then
               grep -v '^#' "$APP/.env.example" | grep -v '^$' > "$APP/.env"
             fi
             if docker compose -f "$COMPOSE" config --quiet 2>&1; then

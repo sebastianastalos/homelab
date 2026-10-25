@@ -6,7 +6,6 @@ on:
       - main
     paths:
       - '**/docker-compose.yml'
-      - '**/.env.infisical'
   workflow_dispatch:
 
 jobs:
@@ -14,9 +13,6 @@ jobs:
     runs-on: self-hosted
     env:
       EXCLUDED: caddy tailscale immich infisical github-runner cadvisor actual-flow trading212
-      INFISICAL_DOMAIN: https://infisical.sebastianastalos.com
-      INFISICAL_PROJECT_ID: ce6d3fcb-163a-4230-91c7-f28b8d738c94
-      INFISICAL_DISABLE_UPDATE_CHECK: 'true'
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -36,34 +32,16 @@ jobs:
           fi
           echo "Diffing: $BASE..HEAD"
           CHANGED=$(git diff --name-only "$BASE" HEAD \
-            | grep -E '/(docker-compose\.yml|\.env\.infisical)$' \
-            | sed -E 's#/(docker-compose\.yml|\.env\.infisical)$##' \
+            | grep -E '/docker-compose\.yml$' \
+            | sed -E 's#/docker-compose\.yml$##' \
             | sort -u | tr '\n' ' ' | xargs)
           echo "apps=$CHANGED" >> $GITHUB_OUTPUT
           echo "Changed apps: $CHANGED"
-          NEEDED=""
-          for APP in $CHANGED; do
-            if [ -f "$GITHUB_WORKSPACE/$APP/.env.infisical" ] \
-               && ! echo " $EXCLUDED " | grep -qF " $APP "; then
-              NEEDED="$APP"
-            fi
-          done
-          if [ -n "$NEEDED" ]; then
-            echo "infisical=true" >> $GITHUB_OUTPUT
-          else
-            echo "No changed app uses Infisical"
-          fi
-
-      - name: Install Infisical CLI
-        if: steps.changed.outputs.infisical == 'true'
-        uses: ./.github/actions/infisical-cli
 
       - name: Deploy changed apps
         if: steps.changed.outputs.apps != ''
         env:
           TRUENAS_API_KEY: ${{ secrets.TRUENAS_API_KEY }}
-          INFISICAL_UNIVERSAL_AUTH_CLIENT_ID: ${{ secrets.INFISICAL_CLIENT_ID }}
-          INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET: ${{ secrets.INFISICAL_CLIENT_SECRET }}
         run: |
           for APP in ${{ steps.changed.outputs.apps }}; do
             # A removed app shows up as a changed path too. Nothing to deploy,
@@ -75,39 +53,6 @@ jobs:
             if echo " $EXCLUDED " | grep -qF " $APP "; then
               echo "Skipping $APP (excluded from auto-deploy)"
               continue
-            fi
-            # An app with a .env.infisical has Infisical as the source of truth:
-            # the file holds the folder path to export from. Rendered to a temp
-            # file first so a failed or empty export aborts the step (bash -e)
-            # without having truncated a working .env. Credentials and token
-            # reach the CLI through env, never argv; one login serves every app.
-            if [ -f "$GITHUB_WORKSPACE/$APP/.env.infisical" ]; then
-              INFISICAL_PATH=$(awk '{ sub(/#.*/, ""); gsub(/[[:space:]]/, "") } NF { print; exit }' \
-                "$GITHUB_WORKSPACE/$APP/.env.infisical")
-              if [ -z "$INFISICAL_PATH" ]; then
-                echo "::error::$APP/.env.infisical has no folder path"
-                exit 1
-              fi
-              if [ -z "${INFISICAL_TOKEN:-}" ]; then
-                INFISICAL_TOKEN=$(infisical login --method=universal-auth \
-                  --domain "$INFISICAL_DOMAIN" --silent --plain)
-                if [ -z "$INFISICAL_TOKEN" ]; then
-                  echo "::error::Infisical login returned no token"
-                  exit 1
-                fi
-                echo "::add-mask::$INFISICAL_TOKEN"
-                export INFISICAL_TOKEN
-              fi
-              echo "Rendering $APP/.env from Infisical $INFISICAL_PATH"
-              infisical export --domain "$INFISICAL_DOMAIN" --projectId "$INFISICAL_PROJECT_ID" \
-                --env prod --path "$INFISICAL_PATH" --format dotenv --silent -o "/tmp/$APP.env"
-              if [ ! -s "/tmp/$APP.env" ]; then
-                rm -f "/tmp/$APP.env"
-                echo "::error::Infisical returned no secrets for $APP at $INFISICAL_PATH"
-                exit 1
-              fi
-              install -m 600 -o 950 -g 950 "/tmp/$APP.env" "/mnt/app/$APP/.env"
-              rm -f "/tmp/$APP.env"
             fi
             echo "Restarting $APP..."
             cp $GITHUB_WORKSPACE/$APP/docker-compose.yml /mnt/app/$APP/docker-compose.yml

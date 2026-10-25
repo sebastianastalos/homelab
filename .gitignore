@@ -2,8 +2,6 @@
 **/.env
 **/.env.*
 !**/.env.example
-# .env.infisical holds an Infisical folder path only.
-!**/.env.infisical
 *.key
 *.pem
 *.crt
