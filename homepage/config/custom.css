@@ -33,11 +33,6 @@ html {
   margin-bottom: 0.25rem !important;
 }
 
-/* Compact tiles: icon and name only */
-.service-description {
-  display: none;
-}
-
 /* Bigger tiles: taller card, larger icon and name */
 .service-card .service-title {
   min-height: 3.25rem;
