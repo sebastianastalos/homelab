@@ -47,6 +47,7 @@ services:
       - model-cache:/cache
     env_file:
       - .env
+    oom_score_adj: 500
     restart: always
     healthcheck:
       disable: false
