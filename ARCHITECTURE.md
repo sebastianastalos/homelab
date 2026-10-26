@@ -213,6 +213,12 @@ Jellyfin gets `/dev/dri:/dev/dri` and `group_add: "107"`. GID 107 is the
 group membership the device node is present but unusable, which presents as
 software transcoding with no error.
 
+Immich's `immich-server` gets the same two lines. That only exposes the device;
+Immich uses it once Administration → Settings → Video Transcoding → Hardware
+Acceleration is set to Quick Sync, which is stored in Immich's database rather
+than the compose file. On failure Immich falls back to software silently, so
+"without hardware acceleration" in its log is the sign that it is not working.
+
 The i3-1315U is 12th-gen Alder Lake, and its Quick Sync block **encodes H.264
 and HEVC only**. It can *decode* AV1 but not encode it, so "Allow encoding in
 AV1 format" must stay unticked in Jellyfin's transcoding settings; ticking it
