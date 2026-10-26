@@ -219,7 +219,7 @@ Acceleration is set to Quick Sync, which is stored in Immich's database rather
 than the compose file. On failure Immich falls back to software silently, so
 "without hardware acceleration" in its log is the sign that it is not working.
 
-The i3-1315U is 12th-gen Alder Lake, and its Quick Sync block **encodes H.264
+The i3-1315U is 13th-gen Raptor Lake, and its Quick Sync block **encodes H.264
 and HEVC only**. It can *decode* AV1 but not encode it, so "Allow encoding in
 AV1 format" must stay unticked in Jellyfin's transcoding settings; ticking it
 produces failed transcodes rather than a graceful fallback.
@@ -505,6 +505,12 @@ key, so its blast radius is this repo alone.
   `docker rm`, `midclt call app.start <app>`, then remove the orphaned
   `<app>_default` network. `truenas-app.py` now guards against a recurrence by
   failing when an app reports zero containers after a redeploy.
+- **16 GB of RAM leaves under 1 GB free, with no swap.** A few hundred MB of
+  growth triggers the global OOM killer, which picks a victim by score rather
+  than by cause: on 2026-10-25 it killed Radarr when `immich-machine-learning`
+  was loading models. That service runs with `oom_score_adj: 500` so it is
+  killed first and Immich retries the job. A memory limit would not have helped:
+  it peaked at about 1 GB, well under any workable cap. The fix is more RAM.
 - **The NVMe holding `app` occasionally fails to enumerate after a restart,**
   taking every app with it. The pool and data are intact – the drive simply did
   not come back. A **cold shutdown and power-on** fixes it; a warm restart does
