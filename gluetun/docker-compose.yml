@@ -65,7 +65,7 @@ services:
     labels:
       deunhealth.restart.on.unhealthy: "true"
       kuma.dispatcharr.http.name: "Dispatcharr"
-      kuma.dispatcharr.http.url: "http://192.168.1.131:9191"
+      kuma.dispatcharr.http.url: "https://dispatcharr.sebastianastalos.com"
     restart: unless-stopped
 
   deunhealth:
