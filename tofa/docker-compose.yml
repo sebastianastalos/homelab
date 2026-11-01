@@ -1,0 +1,33 @@
+services:
+  tofa:
+    image: ghcr.io/tofatv/tofa:0.13.0
+    container_name: tofa
+    env_file:
+      - .env
+    init: true
+    shm_size: 512m
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    # Host networking so home devices find it directly; its UPnP remote
+    # access stays off in Settings > Remote Access (Tailscale only).
+    network_mode: host
+    mem_limit: 1536m
+    devices:
+      - /dev/dri:/dev/dri
+    group_add:
+      - "107"
+    volumes:
+      - /mnt/app/tofa/data:/data
+      - /mnt/storage/mediadata/media:/media:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:33333/api/v1/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    labels:
+      kuma.tofa.http.name: "tofa"
+      kuma.tofa.http.url: "http://192.168.1.131:33333/api/v1/health"
+    restart: unless-stopped
