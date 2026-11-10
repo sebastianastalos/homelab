@@ -189,9 +189,18 @@ query logs useless. Host networking gives it real client addresses. The cost is
 that its web UI had to move off port 80 to avoid colliding with the reverse
 proxy.
 
-AdGuard is the **tailnet-wide** DNS server, set as a global nameserver in the
-Tailscale admin console with "Override local DNS" enabled, so filtering applies
-to every device on the tailnet rather than only those on the LAN.
+**NextDNS is the only global nameserver** in the Tailscale admin console, with
+"Override local DNS" enabled and the nameserver marked "Use with exit node", so
+filtering applies to every device on the tailnet, including devices routing
+through the VPN exit node. AdGuard keeps only the split-DNS route for the
+service domain. Two reasons for the move: with several global nameservers
+listed, devices use whichever answers, so filtering was hit-and-miss; and a
+hosted resolver keeps filtering when the NAS is down.
+
+Previously AdGuard was the tailnet-wide filter, set as a global nameserver
+alongside public resolvers. Exit-node traffic bypassed it entirely, because a
+device on an exit node sends all DNS to the exit node unless a nameserver is
+marked for exit-node use.
 
 **Tailscale provides all remote access; no ports are forwarded from the
 internet.** It also acts as a **subnet router**, advertising the home LAN range

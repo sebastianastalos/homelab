@@ -19,7 +19,7 @@ Everything is containerised and managed with Docker Compose. Renovate keeps serv
 
 ## **Security & Networking**
 
-App secrets live in gitignored `.env` files on the host, with break-glass copies in a password manager. Tailscale provides secure remote access with no open ports. All services are exposed exclusively over the tailnet, with DNS handled by AdGuard Home. Caddy terminates HTTPS using per-hostname Let's Encrypt certificates obtained via Porkbun DNS challenge.
+App secrets live in gitignored `.env` files on the host, with break-glass copies in a password manager. Tailscale provides secure remote access with no open ports. All services are exposed exclusively over the tailnet, with DNS filtering by NextDNS (set tailnet-wide in Tailscale) and AdGuard Home answering the internal domain. Caddy terminates HTTPS using per-hostname Let's Encrypt certificates obtained via Porkbun DNS challenge.
 
 ## **Monitoring & Observability**
 
@@ -61,7 +61,7 @@ Front-panel LEDs restored via [install_ugreen_leds_controller](https://github.co
 | **SABnzbd** | Usenet client |
 | **Seerr** | Media request portal |
 | **Tracearr** | Media server monitoring |
-| **AdGuard Home** | Network-wide DNS filter |
+| **AdGuard Home** | Resolves the internal service domain (split DNS) |
 | **Tailscale** | Remote access mesh VPN |
 | **Gluetun** | VPN tunnel that other containers share for their network |
 | **Dispatcharr** | Live TV stream proxy and guide (EPG) manager |
