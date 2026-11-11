@@ -192,10 +192,23 @@ proxy.
 **NextDNS is the only global nameserver** in the Tailscale admin console, with
 "Override local DNS" enabled and the nameserver marked "Use with exit node", so
 filtering applies to every device on the tailnet, including devices routing
-through the VPN exit node. AdGuard keeps only the split-DNS route for the
-service domain. Two reasons for the move: with several global nameservers
-listed, devices use whichever answers, so filtering was hit-and-miss; and a
-hosted resolver keeps filtering when the NAS is down.
+through the VPN exit node. Two reasons for the move: with several global
+nameservers listed, devices use whichever answers, so filtering was
+hit-and-miss; and a hosted resolver keeps filtering when the NAS is down.
+
+**The service domain is on the NextDNS allowlist.** Its wildcard record points
+at a Tailscale address (`100.64.0.0/10`), and NextDNS's DNS-rebinding
+protection blocks any public name that resolves into a private range, answering
+`0.0.0.0` for every service. Allowlisting the domain skips that check for it
+alone, so rebinding protection stays on for everything else. A plain query to
+NextDNS's anycast address carries no profile and never shows the block; test
+through the profile's own DoH URL.
+
+For one day AdGuard kept a split-DNS route for the service domain, which hid
+the rebinding block. Removing the route exposed it, the allowlist fixed it, and
+AdGuard was stopped (2026-11-11). It only ever forwarded that domain, with no
+rewrites, so nothing else depended on it. Rollback is to start it and re-add
+the split route marked "Use with exit node".
 
 Previously AdGuard was the tailnet-wide filter, set as a global nameserver
 alongside public resolvers. Exit-node traffic bypassed it entirely, because a
@@ -205,9 +218,9 @@ marked for exit-node use.
 **Tailscale provides all remote access; no ports are forwarded from the
 internet.** It also acts as a **subnet router**, advertising the home LAN range
 so tailnet devices can reach local addresses directly. That has a non-obvious
-benefit: Tailscale's split-DNS entry for the local domain can point at AdGuard's
-*LAN* address rather than its tailnet address, because subnet routing makes the
-LAN reachable from everywhere on the tailnet.
+benefit: while AdGuard was in use, Tailscale's split-DNS entry for the local
+domain could point at AdGuard's *LAN* address rather than its tailnet address,
+because subnet routing makes the LAN reachable from everywhere on the tailnet.
 
 Service DNS is a wildcard A record pointing at the NAS's **Tailscale** address,
 so `<service>.<domain>` resolves publicly but only routes for tailnet members.
@@ -551,7 +564,7 @@ duplicated here.
 | Media serving | Jellyfin, Tracearr |
 | Media automation | Sonarr, Radarr, Prowlarr, Bazarr, Profilarr, Autobrr, Seerr |
 | Download clients | SABnzbd |
-| Networking | Tailscale, AdGuard Home, Caddy |
+| Networking | Tailscale, NextDNS, Caddy (AdGuard Home stopped) |
 | Monitoring | Prometheus, Grafana, Loki, Promtail, node-exporter, cAdvisor, Scrutiny, Dozzle, Uptime Kuma, autokuma |
 | Photos | Immich |
 | Finance | Actual Budget, actual-flow |
