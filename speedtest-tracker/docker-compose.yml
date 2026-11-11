@@ -1,0 +1,13 @@
+services:
+  speedtest-tracker:
+    image: lscr.io/linuxserver/speedtest-tracker:1.15.1
+    container_name: speedtest-tracker
+    env_file: .env
+    volumes:
+      - /mnt/app/speedtest-tracker/config:/config
+    ports:
+      - "8765:80"
+    labels:
+      kuma.speedtest-tracker.http.name: "Speedtest Tracker"
+      kuma.speedtest-tracker.http.url: "https://speedtest.sebastianastalos.com"
+    restart: unless-stopped
