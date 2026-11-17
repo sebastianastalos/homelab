@@ -1,5 +1,4 @@
 [![Gitleaks](https://github.com/sebastianastalos/homelab/actions/workflows/gitleaks.yml/badge.svg)](https://github.com/sebastianastalos/homelab/actions/workflows/gitleaks.yml)
-[![Secrets canary](https://github.com/sebastianastalos/homelab/actions/workflows/secrets.yml/badge.svg)](https://github.com/sebastianastalos/homelab/actions/workflows/secrets.yml)
 [![Deploy](https://github.com/sebastianastalos/homelab/actions/workflows/deploy.yml/badge.svg)](https://github.com/sebastianastalos/homelab/actions/workflows/deploy.yml)
 [![Lint](https://github.com/sebastianastalos/homelab/actions/workflows/lint.yml/badge.svg)](https://github.com/sebastianastalos/homelab/actions/workflows/lint.yml)
 
