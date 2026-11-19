@@ -42,6 +42,7 @@ autobrr/config/
 loki/data/
 caddy/data/
 uptime-kuma/data/
+dozzle/data/
 caddy/config/caddy/
 posterizarr/
 
