@@ -32,6 +32,11 @@
       "description": "tracearr publishes the supervised variant as supervised-<semver>; the regex also excludes its beta and nightly tags"
     },
     {
+      "matchPackageNames": ["homebridge/homebridge"],
+      "versioning": "regex:^(?<major>\\d{4})-(?<minor>\\d{2})-(?<patch>\\d{2})$",
+      "description": "homebridge stable releases are dated tags (YYYY-MM-DD); the regex excludes the alpha-, beta- and legacy- tags"
+    },
+    {
       "matchPackageNames": ["lscr.io/linuxserver/jellyfin"],
       "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)(?:\\.(?<patch>\\d+))?ubu(?<compatibility>\\d+)-ls(?<build>\\d+)$",
       "description": "from 12.x LinuxServer.io tags jellyfin as <version>ubu<ubuntu>-ls<build> (e.g. 12.1ubu2604-ls51); default versioning matched none of them, so no 12.x PR was ever raised"

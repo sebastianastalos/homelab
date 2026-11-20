@@ -43,6 +43,7 @@ loki/data/
 caddy/data/
 uptime-kuma/data/
 dozzle/data/
+homebridge/data/
 caddy/config/caddy/
 posterizarr/
 

@@ -1,0 +1,16 @@
+services:
+  homebridge:
+    image: homebridge/homebridge:2026-11-15
+    container_name: homebridge
+    env_file: .env
+    # HomeKit discovery needs the LAN directly. TrueNAS's avahi holds port 5353
+    # exclusively, so HomeKit advertises through it over D-Bus (bridge advertiser
+    # "avahi") and the UI's own mDNS advert is off (enableMdnsAdvertise: false).
+    network_mode: host
+    volumes:
+      - /mnt/app/homebridge/data:/homebridge
+      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
+    labels:
+      kuma.homebridge.http.name: "Homebridge"
+      kuma.homebridge.http.url: "https://homebridge.sebastianastalos.com"
+    restart: unless-stopped
